@@ -21,6 +21,7 @@ interface BackPropagatingFragment {
     fun onBack()
 }
 
+// TODO 在 base 封装对生命周期的处理
 abstract class BasePresenter<View : IdentifiedView>(view: View) : ScopedPresenter {
     var view: WeakReference<View> = WeakReference(view)
 }

@@ -1,6 +1,9 @@
 package me.atomx2u.rss.ui
 
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import me.atomx2u.rss.ui.article.detail.ArticleDetailFragment
+import me.atomx2u.rss.ui.article.list.ArticlesFragment
 import me.atomx2u.rss.ui.feed.add.AddFeedFragment
 import me.atomx2u.rss.ui.feed.subscription.UserSubscriptionFragment
 
@@ -15,9 +18,15 @@ class NavigationManager(
         }
     }
 
-    fun showAddFeedFragment() {
+    fun showAddFeedFragment() = addTransaction(AddFeedFragment.newInstance(), AddFeedFragment.TAG)
+
+    fun showArticles(feedId: Long) = addTransaction(ArticlesFragment.newInstance(), ArticlesFragment.TAG)
+
+    fun showArticleDetail(articleId: Long) = addTransaction(ArticleDetailFragment.newInstance(), ArticleDetailFragment.TAG)
+
+    private fun addTransaction(fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
-            .add(AddFeedFragment.newInstance(), AddFeedFragment.TAG)
+            .add(fragment, tag)
             .addToBackStack(null)
             .commit()
     }
