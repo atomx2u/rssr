@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="dangerRed">#ec187b</color>
+    <color name="unFavouriteGray">#ccc</color>
 </resources>

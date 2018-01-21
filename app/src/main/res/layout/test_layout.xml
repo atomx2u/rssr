@@ -1,0 +1,92 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#000"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbarStyle="insideOverlay"
+        android:background="#fff"
+        android:fadeScrollbars="false"
+        android:layout_margin="8dp"
+        android:padding="16dp" >
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#aaa" >
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideOverlay"/>
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideOverlay"/>
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideOverlay"/>
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideOverlay"/>
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideOverlay"/>
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideOverlay"/>
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideOverlay"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbarStyle="insideInset"
+        android:background="#fff"
+        android:scrollbarTrackVertical="@color/colorAccent"
+        android:fadeScrollbars="false"
+        android:layout_margin="8dp"
+        android:padding="16dp" >
+
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#aaa" >
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="insideInset" />
+        </LinearLayout>
+
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbarStyle="outsideOverlay"
+        android:background="#fff"
+        android:fadeScrollbars="false"
+        android:layout_margin="8dp"
+        android:padding="16dp" >
+
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#aaa" >
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideOverlay" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideOverlay" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideOverlay" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideOverlay" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideOverlay" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideOverlay" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideOverlay" />
+        </LinearLayout>
+
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#fff"
+        android:layout_weight="1"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbarTrackVertical="@color/colorAccent"
+        android:fadeScrollbars="false"
+        android:layout_margin="8dp"
+        android:padding="16dp" >
+
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#aaa" >
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideInset" />
+            <TextView android:textSize="32sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="outsideInset" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:visibility="gone"
-            app:constraint="@+id/btnAdd"
+            app:layout_constraintRight_toLeftOf="@+id/btnAdd"
             app:layout_constraintBottom_toBottomOf="@+id/btnAdd"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="@+id/btnAdd"/>

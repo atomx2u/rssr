@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_subscription_min_height">72dp</dimen>
+    <dimen name="item_subscription_image_horizontal_margin">16dp</dimen>
+    <dimen name="item_subscription_image_vertical_margin">8dp</dimen>
+    <dimen name="item_subscription_horizontal_guide_middle">32dp</dimen>
+</resources>
