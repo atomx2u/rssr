@@ -7,18 +7,12 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_add_feed.*
 import me.atomx2u.rss.MainActivity
 import me.atomx2u.rss.R
-import me.atomx2u.rss.base.BaseDialogFragment
+import me.atomx2u.rss.mvp.BaseDialogFragment
 import me.atomx2u.rss.data.component.FeedValidatorImpl
 import me.atomx2u.rss.data.preference.Prefs
 import me.atomx2u.rss.data.util.TimeUtilsImpl
 
 class AddFeedFragment : BaseDialogFragment<AddFeedContract.Presenter>(), AddFeedContract.View {
-
-    private lateinit var presenter: AddFeedPresenter
-
-    override fun getViewId(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_add_feed, container, false)
@@ -57,7 +51,7 @@ class AddFeedFragment : BaseDialogFragment<AddFeedContract.Presenter>(), AddFeed
     }
 
     companion object {
-        const val TAG = "AddFeedFragment"
+        val TAG = AddFeedFragment::class.java.simpleName
 
         fun newInstance(): AddFeedFragment {
             return AddFeedFragment()

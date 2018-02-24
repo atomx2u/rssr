@@ -1,16 +1,16 @@
 package me.atomx2u.rss.ui.feed.subscription
 
-import me.atomx2u.rss.base.IdentifiedView
-import me.atomx2u.rss.base.ScopedPresenter
+import me.atomx2u.rss.mvp.MvpPresenter
 import me.atomx2u.rss.domain.Feed
+import me.atomx2u.rss.mvp.MvpView
 
 interface UserSubscriptionContract {
 
-    interface View : IdentifiedView {
+    interface View : MvpView {
         fun showFeedSubscriptions(feeds: List<Feed>)
     }
 
-    interface Presenter : ScopedPresenter {
+    interface Presenter : MvpPresenter {
         fun updateFeedSubscriptions()
         fun showArticles(feed: Feed)
         fun showAddNewFeed()

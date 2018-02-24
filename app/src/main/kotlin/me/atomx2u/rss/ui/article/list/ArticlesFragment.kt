@@ -1,9 +1,9 @@
 package me.atomx2u.rss.ui.article.list
 
-import me.atomx2u.rss.base.BaseFragment
-import me.atomx2u.rss.base.ScopedPresenter
+import me.atomx2u.rss.mvp.BaseFragment
+import me.atomx2u.rss.mvp.MvpPresenter
 
-class ArticlesFragment : BaseFragment<ScopedPresenter>() {
+class ArticlesFragment : BaseFragment<MvpPresenter>() {
     override fun getViewId(): String {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

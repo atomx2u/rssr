@@ -13,9 +13,7 @@ class NavigationManager(
 ) {
 
     fun refreshUserSubscriptionFragment() {
-        fragmentManager.findFragmentByTag(UserSubscriptionFragment.TAG)?.let {
-            (it as UserSubscriptionFragment).controller.refreshUserSubscriptions()
-        }
+
     }
 
     fun showAddFeedFragment() = addTransaction(AddFeedFragment.newInstance(), AddFeedFragment.TAG)

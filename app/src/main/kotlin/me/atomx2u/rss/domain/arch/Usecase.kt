@@ -4,6 +4,9 @@ import io.reactivex.CompletableSource
 import io.reactivex.ObservableSource
 import io.reactivex.Single
 
+/***
+ * UseCase 是数据的业务抽象
+ * */
 interface UseCase<R> {
     fun execute(): ObservableSource<R>
 }

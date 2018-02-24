@@ -2,7 +2,7 @@ package me.atomx2u.rss.ui.feed.add
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import me.atomx2u.rss.base.BasePresenter
+import me.atomx2u.rss.mvp.BasePresenter
 import me.atomx2u.rss.data.RepositoryImpl
 import me.atomx2u.rss.data.database.DAOImpl
 import me.atomx2u.rss.data.preference.Prefs
@@ -14,7 +14,6 @@ import me.atomx2u.rss.domain.interactor.feed.AddFeedUseCase
 import me.atomx2u.rss.domain.interactor.feed.IsFeedSubscribedUseCase
 import me.atomx2u.rss.ui.NavigationManager
 import me.atomx2u.rss.util.callIfNotNull
-import java.lang.ref.WeakReference
 
 class AddFeedPresenter(
     view: AddFeedContract.View,
@@ -34,26 +33,6 @@ class AddFeedPresenter(
         isFeedSubscribedUseCase = IsFeedSubscribedUseCase(repo)
     }
 
-    override fun create() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun resume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun pause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun destroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun back() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun addNewFeedSubscription(feedLink: String) {
         view.callIfNotNull { clearErrorHint() }
         feedValidator.validateFeed(feedLink)
@@ -66,6 +45,10 @@ class AddFeedPresenter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(this::onAddNewFeedSubscriptionComplete,
                 this::onAddNewFeedSubscriptionError)
+    }
+
+    override fun back() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun onAddNewFeedSubscriptionComplete() {

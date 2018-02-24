@@ -1,35 +1,40 @@
-package me.atomx2u.rss.base
+package me.atomx2u.rss.mvp
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import io.reactivex.android.schedulers.AndroidSchedulers
 import java.lang.ref.WeakReference
 
-interface IdentifiedView {
-    fun getViewId(): String
+abstract class BasePresenter<View : MvpView>(view: View) : MvpPresenter {
+    val view: WeakReference<View> = WeakReference(view)
+    val actionQueue = RxViewActionQueue(AndroidSchedulers.mainThread())
+
+    override fun create() {
+    }
+
+    override fun resume() {
+        actionQueue.resume()
+    }
+
+    override fun pause() {
+        actionQueue.pause()
+    }
+
+    override fun destroy() {
+        actionQueue.destory()
+    }
 }
 
-interface ScopedPresenter {
-    fun create()
-    fun resume()
-    fun pause()
-    fun destroy()
-    fun back()
-}
 
-interface BackPropagatingFragment {
-    fun onBack()
-}
+/**
+ * BaseFragment 并不是一个 View，而是一个 P, V 关系的联结(nexus)。
+ * 可以将 BaseFragment 同时作为一个 View 使用；也可以单独实现一个 MvpView
+ * */
+abstract class BaseFragment<Presenter : MvpPresenter>
+    : Fragment(), MvpNexus {
 
-// TODO 在 base 封装对生命周期的处理
-abstract class BasePresenter<View : IdentifiedView>(view: View) : ScopedPresenter {
-    var view: WeakReference<View> = WeakReference(view)
-}
-
-abstract class BaseFragment<Presenter: ScopedPresenter>
-    : Fragment(), BackPropagatingFragment, IdentifiedView {
-
-    private lateinit var presenter: Presenter
+    lateinit var presenter: Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +61,11 @@ abstract class BaseFragment<Presenter: ScopedPresenter>
     }
 }
 
-abstract class BaseDialogFragment<Presenter: ScopedPresenter>
-    : DialogFragment(), BackPropagatingFragment, IdentifiedView {
 
-    private lateinit var presenter: Presenter
+abstract class BaseDialogFragment<Presenter: MvpPresenter>
+    : DialogFragment(), MvpNexus {
+
+    lateinit var presenter: Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

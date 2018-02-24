@@ -1,12 +1,10 @@
 package me.atomx2u.rss.ui.feed.subscription
 
-import me.atomx2u.rss.base.BasePresenter
-import me.atomx2u.rss.data.RepositoryImpl
 import me.atomx2u.rss.domain.Feed
 import me.atomx2u.rss.domain.Repository
+import me.atomx2u.rss.mvp.BasePresenter
 import me.atomx2u.rss.ui.NavigationManager
 import me.atomx2u.rss.util.callIfNotNull
-import java.lang.ref.WeakReference
 
 class UserSubscriptionPresenter(
     view: UserSubscriptionContract.View,
@@ -14,24 +12,11 @@ class UserSubscriptionPresenter(
     private val navigator: NavigationManager
 ) : BasePresenter<UserSubscriptionContract.View>(view), UserSubscriptionContract.Presenter {
 
-    override fun create() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun resume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun pause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun destroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    // TODO: ViewActionQueue for preventing the call FragmentTransaction after onSaveInstanceState()
+    // TODO: or some better way ?
+    // 还有什么特别的理由需要 ViewActionQueue 吗？ 比如，阻止进一步的操作（UI操作过程再次启动新的后台线程操作）
 
     override fun back() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun updateFeedSubscriptions() {

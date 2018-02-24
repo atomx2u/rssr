@@ -1,20 +1,23 @@
 package me.atomx2u.rss.ui.feed.subscription
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_user_subscription.*
 import me.atomx2u.rss.R
-import me.atomx2u.rss.base.BaseFragment
+import me.atomx2u.rss.mvp.BaseFragment
 import me.atomx2u.rss.domain.Feed
+import me.atomx2u.rss.droidex.toast
 import me.atomx2u.rss.util.ImageLoader
 
 class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter>(), UserSubscriptionContract.View {
+
+    private val destroyDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_user_subscription, container, false)
@@ -33,16 +36,22 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
     private fun setupSubscriptionRecyclerView() {
         val imageLoader = object : ImageLoader {
             override fun loadImage(url: String, target: ImageView, placeholder: Int, errorDrawable: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
         }
-        subscriptions.adapter = FeedAdapter(imageLoader)
+        val adapter =  FeedAdapter(imageLoader).apply {
+            destroyDisposable.add(onItemClick().subscribe(::onUserSubscriptionItemClick))
+            destroyDisposable.add(onItemLongClick().subscribe(::onUserSubscriptionItemLongClick))
+        }
+        subscriptions.adapter = adapter
         subscriptions.layoutManager = LinearLayoutManager(context)
+        add.setOnClickListener(::onAddSubscriptionBtnClick)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unsetToolbar()
+        destroyDisposable.dispose()
     }
 
     private fun unsetToolbar() {
@@ -50,31 +59,20 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
     }
 
     override fun showFeedSubscriptions(feeds: List<Feed>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        (subscriptions.adapter as? FeedAdapter)?.data?.onNext(feeds)
     }
 
-    override fun getViewId(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    // nexus method
+    private fun onAddSubscriptionBtnClick(v : View) {
+        presenter.showAddNewFeed()
     }
 
-    private fun onAddSubscriptionBtnClick() {
-
+    private fun onUserSubscriptionItemClick(feed: Feed) {
+        presenter.showArticles(feed)
     }
 
-    private fun onUserSubscriptionItemClick() {
-
-    }
-
-    private fun onUserSubscriptionItemLongClick() {
-
-    }
-
-    val controller = Controller()
-
-    inner class Controller {
-
-        fun refreshUserSubscriptions() {
-        }
+    private fun onUserSubscriptionItemLongClick(feed: Feed) {
+        toast("emm..")
     }
 
     companion object {

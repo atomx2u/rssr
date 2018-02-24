@@ -1,15 +1,15 @@
 package me.atomx2u.rss.ui.feed.add
 
-import me.atomx2u.rss.base.IdentifiedView
-import me.atomx2u.rss.base.ScopedPresenter
+import me.atomx2u.rss.mvp.MvpView
+import me.atomx2u.rss.mvp.MvpPresenter
 
 interface AddFeedContract {
 
-    interface Presenter: ScopedPresenter {
+    interface Presenter: MvpPresenter {
         fun addNewFeedSubscription(feedLink: String)
     }
 
-    interface View: IdentifiedView {
+    interface View: MvpView {
         fun showErrorHint(hint: CharSequence)
         fun clearErrorHint()
         fun switchLoading(isLoading: Boolean)
