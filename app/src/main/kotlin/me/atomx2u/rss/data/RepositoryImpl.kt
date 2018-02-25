@@ -27,7 +27,7 @@ class RepositoryImpl(
     }
 
     // todo: 包可见，是不是在其他包中调用此包的闭包的时候也是可见的？
-    // todo: doOnError 后 subscribe 还能接受到 onError 吗? 如果不能，交互将不能完成（这是有问题的）。
+    // todo: doOnError 后 subscribeTo 还能接受到 onError 吗? 如果不能，交互将不能完成（这是有问题的）。
     // # 应该 ui 上知道失败吗？
     // $ 应该的。
     // # 有必要知道为什么知道吗？

@@ -1,4 +1,4 @@
-package me.atomx2u.rss.ui.feed.add
+package me.atomx2u.rss.ui.feed.addition
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -51,7 +51,7 @@ class AddFeedFragment : BaseDialogFragment<AddFeedContract.Presenter>(), AddFeed
     }
 
     companion object {
-        val TAG = AddFeedFragment::class.java.simpleName
+        val TAG: String = AddFeedFragment::class.java.simpleName
 
         fun newInstance(): AddFeedFragment {
             return AddFeedFragment()

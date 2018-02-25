@@ -1,4 +1,4 @@
-package me.atomx2u.rss.ui.feed.add
+package me.atomx2u.rss.ui.feed.addition
 
 import me.atomx2u.rss.mvp.MvpView
 import me.atomx2u.rss.mvp.MvpPresenter

@@ -76,6 +76,6 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
     }
 
     companion object {
-        const val TAG = "UserSubscriptionFragment"
+        val TAG: String = UserSubscriptionFragment::class.java.simpleName
     }
 }

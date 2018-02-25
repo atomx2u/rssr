@@ -8,22 +8,24 @@ import java.lang.ref.WeakReference
 
 abstract class BasePresenter<View : MvpView>(view: View) : MvpPresenter {
     val view: WeakReference<View> = WeakReference(view)
-    val actionQueue = RxViewActionQueue(AndroidSchedulers.mainThread())
+    val viewActionQueue = RxViewActionQueue(AndroidSchedulers.mainThread())
 
     override fun create() {
     }
 
     override fun resume() {
-        actionQueue.resume()
+        viewActionQueue.resume()
     }
 
     override fun pause() {
-        actionQueue.pause()
+        viewActionQueue.pause()
     }
 
     override fun destroy() {
-        actionQueue.destory()
+        viewActionQueue.destroy()
     }
+
+    fun <T> WeakReference<T>.callIfNotNull(block: T.() -> Unit) = get()?.let(block)
 }
 
 

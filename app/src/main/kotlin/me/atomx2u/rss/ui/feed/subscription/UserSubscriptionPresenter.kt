@@ -3,13 +3,12 @@ package me.atomx2u.rss.ui.feed.subscription
 import me.atomx2u.rss.domain.Feed
 import me.atomx2u.rss.domain.Repository
 import me.atomx2u.rss.mvp.BasePresenter
-import me.atomx2u.rss.ui.NavigationManager
-import me.atomx2u.rss.util.callIfNotNull
+import me.atomx2u.rss.ui.Navigator
 
 class UserSubscriptionPresenter(
     view: UserSubscriptionContract.View,
     private val repo: Repository,
-    private val navigator: NavigationManager
+    private val navigator: Navigator
 ) : BasePresenter<UserSubscriptionContract.View>(view), UserSubscriptionContract.Presenter {
 
     // TODO: ViewActionQueue for preventing the call FragmentTransaction after onSaveInstanceState()

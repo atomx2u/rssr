@@ -2,4 +2,5 @@
     <string name="app_name">RSS Reader</string>
     <string name="feed_url">Feed URL</string>
     <string name="add">Add</string>
+    <string name="word_new">NEW</string>
 </resources>

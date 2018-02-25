@@ -1,4 +1,4 @@
-package me.atomx2u.rss.ui.feed.add
+package me.atomx2u.rss.ui.feed.addition
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -12,12 +12,11 @@ import me.atomx2u.rss.domain.Repository
 import me.atomx2u.rss.domain.component.FeedValidator
 import me.atomx2u.rss.domain.interactor.feed.AddFeedUseCase
 import me.atomx2u.rss.domain.interactor.feed.IsFeedSubscribedUseCase
-import me.atomx2u.rss.ui.NavigationManager
-import me.atomx2u.rss.util.callIfNotNull
+import me.atomx2u.rss.ui.Navigator
 
 class AddFeedPresenter(
     view: AddFeedContract.View,
-    private val navigator: NavigationManager,
+    private val navigator: Navigator,
     private val feedValidator: FeedValidator,
     prefs: Prefs, timeUtils: TimeUtils
 ) : BasePresenter<AddFeedContract.View>(view), AddFeedContract.Presenter {

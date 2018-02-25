@@ -33,12 +33,12 @@ class RxViewActionQueue(
         isPaused = true
     }
 
-    fun destory() {
+    fun destroy() {
         compositeDisposable.dispose()
     }
 
     // 缺点： 如果有 error log， 在 pause 时也将延迟；可以将 error log 放在 doOnError 里
-    fun <T> subscribe(
+    fun <T> subscribeTo(
         observable: Observable<T>,
         onNext: Consumer<in T> = Functions.emptyConsumer(),
         onError: Consumer<in Throwable> = Functions.emptyConsumer(),
@@ -54,7 +54,7 @@ class RxViewActionQueue(
         )
     }
 
-    fun <T> subscribe(
+    fun <T> subscribeTo(
         single: Single<T>,
         onSuccess: Consumer<in T> = Functions.emptyConsumer(),
         onError: Consumer<in Throwable> = Functions.emptyConsumer()
@@ -64,7 +64,7 @@ class RxViewActionQueue(
         )
     }
 
-    fun subscribe(
+    fun subscribeTo(
         completable: Completable,
         onComplete: Action = Functions.EMPTY_ACTION,
         onError: Consumer<in Throwable> = Functions.emptyConsumer()

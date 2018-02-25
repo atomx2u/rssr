@@ -9,8 +9,7 @@ class GetArticlesUseCase(
     private val repo: Repository
 ) : SingleUseCaseWithRequest<GetArticlesUseCase.Request, List<Article>> {
 
-    override fun execute(request: Request) =
-        repo.getArticles(request.feedId)
+    override fun execute(request: Request) = repo.getArticles(request.feedId)
 
     data class Request(
         val feedId: Long
