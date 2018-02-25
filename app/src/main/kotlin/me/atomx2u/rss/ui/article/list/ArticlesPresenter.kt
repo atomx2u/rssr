@@ -16,7 +16,7 @@ class ArticlesPresenter(
     private val getArticlesUseCase = GetArticlesUseCase(repo)
 
     override fun back() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        navigator.back()
     }
 
     override fun showArticles(feedId: Long) {

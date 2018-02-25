@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.fragment_article_content.*
+import me.atomx2u.rss.MainActivity
 import me.atomx2u.rss.R
 import me.atomx2u.rss.mvp.BaseFragment
 import me.atomx2u.rss.mvp.MvpPresenter
@@ -19,14 +20,15 @@ class ArticleContentFragment : BaseFragment<MvpPresenter>(), MvpView {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        presenter = ArticleContentPresenter(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val link = arguments!!.getString("link")
         webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(link)
     }
+
+    override fun newPresenter() = ArticleContentPresenter(this, (activity as MainActivity).navigator)
 
     companion object {
         val TAG: String = ArticleContentFragment::class.java.simpleName

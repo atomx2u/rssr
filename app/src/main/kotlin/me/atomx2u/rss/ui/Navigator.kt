@@ -34,18 +34,18 @@ class Navigator(
         transactionAdd(fragment, ArticleContentFragment.TAG)
     }
 
-    private fun transactionAdd(fragment: Fragment, tag: String) {
-        fragmentManager.beginTransaction()
-            .add(fragment, tag)
-            .addToBackStack(null)
-            .commit()
-    }
-
     fun back() {
         if (fragmentManager.backStackEntryCount == 0) {
             activity.finish()
         } else {
             fragmentManager.popBackStack()
         }
+    }
+
+    private fun transactionAdd(fragment: Fragment, tag: String) {
+        fragmentManager.beginTransaction()
+            .add(fragment, tag)
+            .addToBackStack(null)
+            .commit()
     }
 }

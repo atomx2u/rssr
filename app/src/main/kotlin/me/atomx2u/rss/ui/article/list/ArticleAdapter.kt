@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
 
-    val data: BehaviorSubject<List<Article>> = BehaviorSubject.create<List<Article>>()
+    val data: BehaviorSubject<List<Article>> = BehaviorSubject.createDefault(emptyList())
 
     fun onItemClick(): Observable<Article> = onItemClickSubject.throttleFirst(50, TimeUnit.SECONDS)
 

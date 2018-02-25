@@ -11,11 +11,8 @@ class UserSubscriptionPresenter(
     private val navigator: Navigator
 ) : BasePresenter<UserSubscriptionContract.View>(view), UserSubscriptionContract.Presenter {
 
-    // TODO: ViewActionQueue for preventing the call FragmentTransaction after onSaveInstanceState()
-    // TODO: or some better way ?
-    // 还有什么特别的理由需要 ViewActionQueue 吗？ 比如，阻止进一步的操作（UI操作过程再次启动新的后台线程操作）
-
     override fun back() {
+        navigator.back()
     }
 
     override fun updateFeedSubscriptions() {

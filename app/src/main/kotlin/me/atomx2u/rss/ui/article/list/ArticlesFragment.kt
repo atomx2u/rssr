@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_articles.*
+import me.atomx2u.rss.MainActivity
 import me.atomx2u.rss.R
+import me.atomx2u.rss.dagger.App
 import me.atomx2u.rss.domain.Article
 import me.atomx2u.rss.mvp.BaseFragment
 
@@ -20,9 +22,8 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         return inflater.inflate(R.layout.fragment_articles, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        presenter = ArticlesPresenter(this, TODO, TODO)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val adapter = ArticleAdapter()
         destroyDisposable.add(
             adapter.onItemClick().subscribe {
@@ -33,7 +34,9 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         articles.adapter = adapter
     }
 
-    override fun showArticles(_articles: List<Article>) {
+    override fun newPresenter() = ArticlesPresenter(this, (activity as MainActivity).navigator, (activity!!.applicationContext as App).repo)
+
+        override fun showArticles(_articles: List<Article>) {
         (articles.adapter as? ArticleAdapter)?.data?.onNext(_articles)
     }
 

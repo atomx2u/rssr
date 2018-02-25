@@ -12,12 +12,13 @@ import io.reactivex.subjects.PublishSubject
 import me.atomx2u.rss.R
 import me.atomx2u.rss.domain.Feed
 import me.atomx2u.rss.util.ImageLoader
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
     // --- input // TODO solve leak；好像不会 leak，跑起来后测试一下
-    val data: BehaviorSubject<List<Feed>> = BehaviorSubject.create<List<Feed>>()
+    val data: BehaviorSubject<List<Feed>> = BehaviorSubject.createDefault(emptyList())
     // --- output
     fun onItemClick(): Observable<Feed> = onItemClickSubject.throttleFirst(50, TimeUnit.SECONDS)
     fun onItemLongClick(): Observable<Feed> = onItemLongClickSubject.throttleFirst(50, TimeUnit.SECONDS)

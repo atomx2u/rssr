@@ -47,7 +47,7 @@ class AddFeedPresenter(
     }
 
     override fun back() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        navigator.back()
     }
 
     private fun onAddNewFeedSubscriptionComplete() {
@@ -71,7 +71,7 @@ class AddFeedPresenter(
                     showErrorHint("Oops")
                 }
             }
-            else -> TODO()
+            else -> {}
         }
     }
 

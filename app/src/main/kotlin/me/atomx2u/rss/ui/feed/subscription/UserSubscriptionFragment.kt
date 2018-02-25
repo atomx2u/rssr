@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_user_subscription.*
+import me.atomx2u.rss.MainActivity
 import me.atomx2u.rss.R
+import me.atomx2u.rss.dagger.App
 import me.atomx2u.rss.mvp.BaseFragment
 import me.atomx2u.rss.domain.Feed
 import me.atomx2u.rss.droidex.toast
@@ -23,8 +25,8 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
         return inflater.inflate(R.layout.fragment_user_subscription, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupSubscriptionRecyclerView()
     }
@@ -56,6 +58,10 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
 
     private fun unsetToolbar() {
         (activity as AppCompatActivity).setSupportActionBar(null)
+    }
+
+    override fun newPresenter(): UserSubscriptionContract.Presenter {
+        return UserSubscriptionPresenter(this, (activity!!.applicationContext as App).repo, (activity as MainActivity).navigator)
     }
 
     override fun showFeedSubscriptions(feeds: List<Feed>) {

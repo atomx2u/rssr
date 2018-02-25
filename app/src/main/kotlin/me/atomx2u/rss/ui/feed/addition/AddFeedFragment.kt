@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_add_feed.*
 import me.atomx2u.rss.MainActivity
 import me.atomx2u.rss.R
+import me.atomx2u.rss.dagger.App
 import me.atomx2u.rss.mvp.BaseDialogFragment
 import me.atomx2u.rss.data.component.FeedValidatorImpl
 import me.atomx2u.rss.data.preference.Prefs
@@ -20,12 +21,11 @@ class AddFeedFragment : BaseDialogFragment<AddFeedContract.Presenter>(), AddFeed
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mainActivity = (activity as MainActivity)
-        presenter = AddFeedPresenter(this, mainActivity.navigationManager,
-            FeedValidatorImpl(), Prefs(context!!.applicationContext), TimeUtilsImpl())
-
         btnAdd.setOnClickListener(this::onBtnAddClick)
     }
+
+    override fun newPresenter() = AddFeedPresenter(this, (activity as MainActivity).navigator, FeedValidatorImpl(),
+        (activity!!.applicationContext as App).prefs, (activity!!.applicationContext as App).timeUtils)
 
     override fun showErrorHint(hint: CharSequence) {
         tvError.apply {

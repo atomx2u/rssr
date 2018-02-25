@@ -11,6 +11,8 @@ import io.reactivex.functions.Consumer
 import io.reactivex.internal.functions.Functions
 import java.util.*
 
+// ViewActionQueue for preventing the call FragmentTransaction after onSaveInstanceState()
+// 阻止进一步的操作（UI操作过程再次启动新的后台线程操作）
 class RxViewActionQueue(
     private val uiScheduler: Scheduler
 ) {

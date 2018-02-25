@@ -7,13 +7,13 @@ import me.atomx2u.rss.domain.arch.SingleUseCase
 import me.atomx2u.rss.domain.component.FeedsUpdateScheduler
 import me.atomx2u.rss.domain.util.applyIfTrue
 
-class EnableAutoFeedsUpdateUseCase(
-    private val repository: Repository,
-    private val feedsUpdateScheduler: FeedsUpdateScheduler
-) : SingleUseCase<Boolean> {
-
-    override fun execute(): Single<Boolean> = repository.setAutoFeedsUpdate(true)
-        .applyIfTrue(Predicate { result: Boolean -> result }) {
-            feedsUpdateScheduler.enableFeedsUpdate()
-        }
-}
+//class EnableAutoFeedsUpdateUseCase(
+//    private val repository: Repository,
+//    private val feedsUpdateScheduler: FeedsUpdateScheduler
+//) : SingleUseCase<Boolean> {
+//
+//    override fun execute(): Single<Boolean> = repository.setAutoFeedsUpdate(true)
+//        .applyIfTrue(Predicate { result: Boolean -> result }) {
+//            feedsUpdateScheduler.enableFeedsUpdate()
+//        }
+//}
