@@ -13,13 +13,17 @@ import me.atomx2u.rss.domain.component.FeedValidator
 import me.atomx2u.rss.domain.interactor.feed.AddFeedUseCase
 import me.atomx2u.rss.domain.interactor.feed.IsFeedSubscribedUseCase
 import me.atomx2u.rss.ui.Navigator
+import java.lang.ref.WeakReference
 
 class AddFeedPresenter(
     view: AddFeedContract.View,
     private val navigator: Navigator,
     private val feedValidator: FeedValidator,
-    prefs: Prefs, timeUtils: TimeUtils
+    prefs: Prefs,
+    timeUtils: TimeUtils
 ) : BasePresenter<AddFeedContract.View>(view), AddFeedContract.Presenter {
+
+    var onNewFeedAdded: WeakReference<OnNewFeedAdded>? = null
 
     private val repo: Repository
     private val addFeedUseCase: AddFeedUseCase
@@ -53,7 +57,7 @@ class AddFeedPresenter(
     private fun onAddNewFeedSubscriptionComplete() {
         view.callIfNotNull { switchLoading(false) }
         navigator.back()
-        navigator.refreshUserSubscriptionFragment()
+        onNewFeedAdded?.callIfNotNull { onNewFeedAdded() }
     }
 
     private fun onAddNewFeedSubscriptionError(t: Throwable?) {
@@ -65,16 +69,19 @@ class AddFeedPresenter(
             is FeedIsSubscribedException -> {
                 view.callIfNotNull { showErrorHint("The Feed is subscribed.") }
             }
-            is Exception -> {
-                t.printStackTrace()
+            else -> {
+                (t as? Exception)?.printStackTrace()
                 view.callIfNotNull {
                     showErrorHint("Oops")
                 }
             }
-            else -> {}
         }
     }
 
     class FeedIsSubscribedException : Exception()
+
+    interface OnNewFeedAdded {
+        fun onNewFeedAdded()
+    }
 }
 

@@ -29,6 +29,6 @@ class UserSubscriptionPresenter(
     }
 
     override fun showAddNewFeed() {
-        navigator.showAddFeedFragment()
+        navigator.showAddFeed()
     }
 }

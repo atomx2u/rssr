@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
-    // --- input // TODO solve leak；好像不会 leak，跑起来后测试一下
+    // --- input
     val data: BehaviorSubject<List<Feed>> = BehaviorSubject.createDefault(emptyList())
     // --- output
     fun onItemClick(): Observable<Feed> = onItemClickSubject.throttleFirst(50, TimeUnit.SECONDS)

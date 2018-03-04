@@ -21,16 +21,22 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() 
 
     fun onItemClick(): Observable<Article> = onItemClickSubject.throttleFirst(50, TimeUnit.SECONDS)
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArticleViewHolder {
+    init {
+        data.subscribe {
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         return ArticleViewHolder(
-            LayoutInflater.from(parent!!.context).inflate(R.layout.item_article, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_article, parent, false)
         )
     }
 
     override fun getItemCount() = data.value.size
 
-    override fun onBindViewHolder(holder: ArticleViewHolder?, position: Int) {
-        holder!!.setArticle(data.value[position])
+    override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
+        holder.setArticle(data.value[position])
     }
 
     private val onItemClickSubject = PublishSubject.create<Article>()

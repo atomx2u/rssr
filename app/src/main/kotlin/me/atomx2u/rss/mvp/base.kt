@@ -1,7 +1,7 @@
 package me.atomx2u.rss.mvp
 
+import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -56,13 +56,6 @@ abstract class BaseActivity<Presenter : MvpPresenter>
 
     override fun onDestroy() {
         super.onDestroy()
-        supportFragmentManager.fragments?.forEach {
-            supportFragmentManager
-                .beginTransaction()
-                .remove(it)
-                .commit()
-        }
-        supportFragmentManager.executePendingTransactions()
         presenter.destroy()
     }
 
@@ -88,9 +81,13 @@ abstract class BaseFragment<Presenter : MvpPresenter>
 
     lateinit var presenter: Presenter
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        presenter = newPresenter(context!!)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = newPresenter()
         presenter.create()
     }
 
@@ -113,7 +110,7 @@ abstract class BaseFragment<Presenter : MvpPresenter>
         presenter.back()
     }
 
-    abstract fun newPresenter(): Presenter
+    abstract fun newPresenter(context: Context): Presenter
 }
 
 
@@ -122,9 +119,13 @@ abstract class BaseDialogFragment<Presenter: MvpPresenter>
 
     lateinit var presenter: Presenter
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        presenter = newPresenter(context!!)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = newPresenter()
         presenter.create()
     }
 
@@ -147,5 +148,5 @@ abstract class BaseDialogFragment<Presenter: MvpPresenter>
         presenter.back()
     }
 
-    abstract fun newPresenter(): Presenter
+    abstract fun newPresenter(context: Context): Presenter
 }

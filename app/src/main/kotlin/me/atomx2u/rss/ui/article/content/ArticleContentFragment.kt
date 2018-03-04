@@ -1,6 +1,7 @@
 package me.atomx2u.rss.ui.article.content
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,15 +21,15 @@ class ArticleContentFragment : BaseFragment<MvpPresenter>(), MvpView {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val link = arguments!!.getString("link")
         webView.webViewClient = WebViewClient()
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(link)
     }
 
-    override fun newPresenter() = ArticleContentPresenter(this, (activity as MainActivity).navigator)
+    override fun newPresenter(context: Context) = ArticleContentPresenter(this, (activity as MainActivity).navigator)
 
     companion object {
         val TAG: String = ArticleContentFragment::class.java.simpleName

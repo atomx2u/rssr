@@ -5,6 +5,11 @@ import me.atomx2u.rss.domain.component.FeedValidator
 
 class FeedValidatorImpl : FeedValidator {
     override fun validateFeed(link: String): Completable {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Completable.fromAction {
+//            http://rss.tgbus.com/psp_soft.xml
+            if (!link.trim().startsWith("http://", ignoreCase = true)) {
+                throw FeedValidator.InvalidFeedLinkException()
+            }
+        }
     }
 }

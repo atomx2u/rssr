@@ -1,12 +1,12 @@
 package me.atomx2u.rss.ui.feed.subscription
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_user_subscription.*
 import me.atomx2u.rss.MainActivity
@@ -15,9 +15,17 @@ import me.atomx2u.rss.dagger.App
 import me.atomx2u.rss.mvp.BaseFragment
 import me.atomx2u.rss.domain.Feed
 import me.atomx2u.rss.droidex.toast
-import me.atomx2u.rss.util.ImageLoader
+import me.atomx2u.rss.ui.feed.addition.AddFeedPresenter
+import me.atomx2u.rss.util.ImageLoaderImpl
 
-class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter>(), UserSubscriptionContract.View {
+class UserSubscriptionFragment :
+    BaseFragment<UserSubscriptionContract.Presenter>(),
+    UserSubscriptionContract.View,
+    AddFeedPresenter.OnNewFeedAdded {
+
+    override fun onNewFeedAdded() {
+        presenter.updateFeedSubscriptions()
+    }
 
     private val destroyDisposable = CompositeDisposable()
 
@@ -29,6 +37,7 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupSubscriptionRecyclerView()
+        presenter.updateFeedSubscriptions()
     }
 
     private fun setupToolbar() {
@@ -36,12 +45,7 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
     }
 
     private fun setupSubscriptionRecyclerView() {
-        val imageLoader = object : ImageLoader {
-            override fun loadImage(url: String, target: ImageView, placeholder: Int, errorDrawable: Int) {
-
-            }
-        }
-        val adapter =  FeedAdapter(imageLoader).apply {
+        val adapter =  FeedAdapter(ImageLoaderImpl(activity!!.applicationContext)).apply {
             destroyDisposable.add(onItemClick().subscribe(::onUserSubscriptionItemClick))
             destroyDisposable.add(onItemLongClick().subscribe(::onUserSubscriptionItemLongClick))
         }
@@ -60,7 +64,7 @@ class UserSubscriptionFragment : BaseFragment<UserSubscriptionContract.Presenter
         (activity as AppCompatActivity).setSupportActionBar(null)
     }
 
-    override fun newPresenter(): UserSubscriptionContract.Presenter {
+    override fun newPresenter(context: Context): UserSubscriptionContract.Presenter {
         return UserSubscriptionPresenter(this, (activity!!.applicationContext as App).repo, (activity as MainActivity).navigator)
     }
 

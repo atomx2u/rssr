@@ -34,10 +34,10 @@ class RepositoryImpl(
     // $ 不应该，App 应该是一个黑盒，用户没必要知道。
     // # 是不是所有的错误都不需要详细的提示？
     // $ 不是的，校验型的应该给出具体的提示。
-    override fun insertFeed(feedLink: String): Completable {
-         return service.fetchFeed(feedLink)
+    override fun insertFeed(link: String): Completable {
+         return service.fetchFeed(link)
              .map { feed: com.einmalfel.earl.Feed ->
-                 feed.toModel(feedLink, timeUtils.getCurrentTime())
+                 feed.toModel(link, timeUtils.getCurrentTime())
              }.flatMapCompletable { (feedModel: FeedModel, articleModels: List<ArticleModel>) ->
                  dao.insertFeedAndArticles(feedModel, articleModels)
              }

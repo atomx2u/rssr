@@ -3,6 +3,7 @@ package me.atomx2u.rss.ui
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import me.atomx2u.rss.R
 import me.atomx2u.rss.ui.article.content.ArticleContentFragment
 import me.atomx2u.rss.ui.article.list.ArticlesFragment
 import me.atomx2u.rss.ui.feed.addition.AddFeedFragment
@@ -12,18 +13,22 @@ class Navigator(
     private val fragmentManager: android.support.v4.app.FragmentManager
 ) {
 
-    fun refreshUserSubscriptionFragment() {
-
+    fun showAddFeed() {
+        // 并不会加入 back stack
+        AddFeedFragment.new().show(fragmentManager, AddFeedFragment.TAG)
+//        AddFeedFragment.new().let {
+//            fragmentManager.beginTransaction().add(it, AddFeedFragment.TAG)
+//                .addToBackStack(AddFeedFragment.TAG)
+//                .commit()
+//        }
     }
-
-    fun showAddFeedFragment() = transactionAdd(AddFeedFragment.newInstance(), AddFeedFragment.TAG)
 
     fun showArticles(feedId: Long) {
         val fragment = ArticlesFragment.newInstance()
         fragment.arguments = Bundle().apply {
             putLong("feedId", feedId)
         }
-        transactionAdd(fragment, ArticlesFragment.TAG)
+        replace(fragment, ArticlesFragment.TAG)
     }
 
     fun showArticleDetail(link: String) {
@@ -31,7 +36,7 @@ class Navigator(
         fragment.arguments = Bundle().apply {
             putString("link", link)
         }
-        transactionAdd(fragment, ArticleContentFragment.TAG)
+        replace(fragment, ArticleContentFragment.TAG)
     }
 
     fun back() {
@@ -42,9 +47,9 @@ class Navigator(
         }
     }
 
-    private fun transactionAdd(fragment: Fragment, tag: String) {
+    private fun replace(fragment: Fragment, tag: String) {
         fragmentManager.beginTransaction()
-            .add(fragment, tag)
+            .replace(R.id.activity_container, fragment, tag)
             .addToBackStack(null)
             .commit()
     }

@@ -10,7 +10,7 @@ android {
         applicationId "me.atomx2u.rss"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
+        versionCode 2
         versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -39,9 +39,9 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
-    implementation 'androidx.core:core-ktx:0.1'
+    implementation 'androidx.core:core-ktx:0.2'
 
-    def support_version = "27.0.2"
+    def support_version = "27.1.0"
     implementation "com.android.support:support-v4:$support_version"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
@@ -62,7 +62,7 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
     implementation "com.github.Raizlabs.DBFlow:dbflow-rx2:${dbflow_version}"
     implementation "com.github.Raizlabs.DBFlow:dbflow-rx2-kotlinextensions:${dbflow_version}"
-    def glide_version = "4.4.0"
+    def glide_version = "4.6.1"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     def dagger_version = "2.13"

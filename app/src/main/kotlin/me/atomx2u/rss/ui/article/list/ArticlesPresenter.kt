@@ -13,6 +13,8 @@ class ArticlesPresenter(
     repo: Repository
 ) : BasePresenter<ArticlesContract.View>(view), ArticlesContract.Presenter {
 
+    var feedId: Long? = null
+
     private val getArticlesUseCase = GetArticlesUseCase(repo)
 
     override fun back() {
@@ -20,6 +22,7 @@ class ArticlesPresenter(
     }
 
     override fun showArticles(feedId: Long) {
+        this.feedId = feedId
         viewActionQueue.subscribeTo(
             getArticlesUseCase.execute(GetArticlesUseCase.Request(feedId)),
             onSuccess = Consumer { articles -> view.get()?.showArticles(articles) }

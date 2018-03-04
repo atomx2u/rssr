@@ -1,5 +1,6 @@
 package me.atomx2u.rss.ui.article.list
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,8 +23,8 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         return inflater.inflate(R.layout.fragment_articles, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val adapter = ArticleAdapter()
         destroyDisposable.add(
             adapter.onItemClick().subscribe {
@@ -32,11 +33,14 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         )
         articles.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         articles.adapter = adapter
+        presenter.showArticles(arguments!!.getLong("feedId"))
     }
 
-    override fun newPresenter() = ArticlesPresenter(this, (activity as MainActivity).navigator, (activity!!.applicationContext as App).repo)
+    override fun newPresenter(context: Context) =
+        ArticlesPresenter(this,
+            (activity as MainActivity).navigator, (activity!!.applicationContext as App).repo)
 
-        override fun showArticles(_articles: List<Article>) {
+    override fun showArticles(_articles: List<Article>) {
         (articles.adapter as? ArticleAdapter)?.data?.onNext(_articles)
     }
 
