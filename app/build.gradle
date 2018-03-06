@@ -9,7 +9,7 @@ android {
     buildToolsVersion "27.0.3"
 
     defaultConfig {
-        applicationId "me.atomx2u.rss_reader"
+        applicationId "me.atomx2u.rssr"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 2

@@ -56,7 +56,7 @@ class AddFeedPresenter(
 
     private fun onAddNewFeedSubscriptionComplete() {
         view.callIfNotNull { switchLoading(false) }
-        navigator.back()
+//        navigator.back() TODO  how to do ?
         onNewFeedAdded?.callIfNotNull { onNewFeedAdded() }
     }
 

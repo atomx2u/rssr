@@ -13,9 +13,8 @@ import me.atomx2u.rssr.MainActivity
 import me.atomx2u.rssr.R
 import me.atomx2u.rssr.dagger.App
 import me.atomx2u.rssr.mvp.BaseFragment
-import me.atomx2u.rssr.domain.Feed
-import me.atomx2u.rssr.droidex.toast
 import me.atomx2u.rssr.ui.feed.addition.AddFeedPresenter
+import me.atomx2u.rssr.ui.model.FeedViewModel
 import me.atomx2u.rssr.util.ImageLoaderImpl
 
 class UserSubscriptionFragment :
@@ -23,8 +22,27 @@ class UserSubscriptionFragment :
     UserSubscriptionContract.View,
     AddFeedPresenter.OnNewFeedAdded {
 
+    enum class ViewState {
+        ADD,
+        DELETE
+    }
+
+    var viewState: ViewState = ViewState.ADD
+        set(value) {
+            field = value
+            when (value) {
+                ViewState.ADD -> setupAddViewState()
+                ViewState.DELETE -> setupDeleteViewState()
+            }
+        }
+
+    lateinit var adapter: FeedAdapter
+
+    private fun setupAddViewState() {}
+    private fun setupDeleteViewState() {}
+
     override fun onNewFeedAdded() {
-        presenter.updateFeedSubscriptions()
+        presenter.updateFavoriteFeedSubscriptions()
     }
 
     private val destroyDisposable = CompositeDisposable()
@@ -37,7 +55,7 @@ class UserSubscriptionFragment :
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupSubscriptionRecyclerView()
-        presenter.updateFeedSubscriptions()
+        presenter.updateFavoriteFeedSubscriptions()
     }
 
     private fun setupToolbar() {
@@ -45,7 +63,7 @@ class UserSubscriptionFragment :
     }
 
     private fun setupSubscriptionRecyclerView() {
-        val adapter =  FeedAdapter(ImageLoaderImpl(activity!!.applicationContext)).apply {
+        adapter =  FeedAdapter(ImageLoaderImpl(activity!!.applicationContext)).apply {
             destroyDisposable.add(onItemClick().subscribe(::onUserSubscriptionItemClick))
             destroyDisposable.add(onItemLongClick().subscribe(::onUserSubscriptionItemLongClick))
         }
@@ -68,21 +86,34 @@ class UserSubscriptionFragment :
         return UserSubscriptionPresenter(this, (activity!!.applicationContext as App).repo, (activity as MainActivity).navigator)
     }
 
-    override fun showFeedSubscriptions(feeds: List<Feed>) {
-        (subscriptions.adapter as? FeedAdapter)?.data?.onNext(feeds)
+    override fun showFeedSubscriptions(feeds: List<FeedViewModel>) {
+        adapter.data.clear()
+        adapter.data.addAll(feeds)
+        adapter.notifyDataSetChanged()
     }
 
     // nexus method
     private fun onAddSubscriptionBtnClick(v : View) {
-        presenter.showAddNewFeed()
+        when (viewState) {
+            ViewState.ADD -> presenter.showAddNewFeed()
+            ViewState.DELETE -> adapter.selectedItem()?.let { presenter.unsubscribeFeed(it) }
+        }
+
     }
 
-    private fun onUserSubscriptionItemClick(feed: Feed) {
-        presenter.showArticles(feed)
+    private fun onUserSubscriptionItemClick(feed: FeedViewModel) {
+        when (viewState) {
+            ViewState.ADD -> presenter.showArticles(feed)
+            ViewState.DELETE -> {
+                adapter.clearSelection()
+                viewState = ViewState.ADD
+            }
+        }
     }
 
-    private fun onUserSubscriptionItemLongClick(feed: Feed) {
-        toast("emm..")
+    private fun onUserSubscriptionItemLongClick(feed: FeedViewModel) {
+        viewState = ViewState.DELETE
+        adapter.setSelection(feed)
     }
 
     companion object {
