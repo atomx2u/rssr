@@ -37,7 +37,7 @@ class AddFeedPresenter(
     }
 
     override fun addNewFeedSubscription(feedLink: String) {
-        view.callIfNotNull { clearErrorHint() }
+        view.get()?.clearErrorHint()
         feedValidator.validateFeed(feedLink)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
@@ -51,29 +51,28 @@ class AddFeedPresenter(
     }
 
     override fun back() {
+        view.get()?.dismiss()
         navigator.back()
     }
 
     private fun onAddNewFeedSubscriptionComplete() {
-        view.callIfNotNull { switchLoading(false) }
-//        navigator.back() TODO  how to do ?
-        onNewFeedAdded?.callIfNotNull { onNewFeedAdded() }
+        view.get()?.switchLoading(false)
+        navigator.back()
+        onNewFeedAdded?.get()?.onNewFeedAdded()
     }
 
     private fun onAddNewFeedSubscriptionError(t: Throwable?) {
-        view.callIfNotNull { switchLoading(false) }
+        view.get()?.switchLoading(false)
         when (t) {
             is FeedValidator.InvalidFeedLinkException -> {
-                view.callIfNotNull { showErrorHint("Invalid Feed Link.") }
+                view.get()?.showErrorHint("Invalid Feed Link.")
             }
             is FeedIsSubscribedException -> {
-                view.callIfNotNull { showErrorHint("The Feed is subscribed.") }
+                view.get()?.showErrorHint("The Feed is subscribed.")
             }
             else -> {
                 (t as? Exception)?.printStackTrace()
-                view.callIfNotNull {
-                    showErrorHint("Oops")
-                }
+                view.get()?.showErrorHint("Oops")
             }
         }
     }

@@ -11,7 +11,7 @@ import me.atomx2u.rssr.ui.model.toViewModel
 
 class UserSubscriptionPresenter(
     view: UserSubscriptionContract.View,
-    private val repo: Repository,
+    repo: Repository,
     private val navigator: Navigator
 ) : BasePresenter<UserSubscriptionContract.View>(view), UserSubscriptionContract.Presenter {
 
@@ -34,7 +34,7 @@ class UserSubscriptionPresenter(
     }
 
     private fun onUpdateFeedSubscriptionsSuccess(feeds: List<FeedViewModel>) {
-        view.callIfNotNull { showFeedSubscriptions(feeds) }
+        view.get()?.showFeedSubscriptions(feeds)
     }
 
     override fun showArticles(feed: FeedViewModel) {

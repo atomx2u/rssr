@@ -8,17 +8,21 @@ import me.atomx2u.rssr.mvp.MvpView
 import me.atomx2u.rssr.ui.Navigator
 import me.atomx2u.rssr.ui.feed.subscription.UserSubscriptionFragment
 
-class MainActivity : BaseActivity<MvpPresenter>(), MvpView {
+class MainActivity : BaseActivity<MvpView, MvpPresenter>(), MvpView {
+
+    override val layoutRes: Int get() = R.layout.activity_main
+
+    override fun vView() = object : MvpView {}
+
+    override fun presenter() = object: BasePresenter<MvpView>(this) {}
 
     val navigator = Navigator(this, supportFragmentManager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
         supportFragmentManager.beginTransaction()
             .add(R.id.activity_container, UserSubscriptionFragment(), UserSubscriptionFragment.TAG)
             .commit()
     }
-
-    override fun newPresenter() = object: BasePresenter<MvpView>(this) {}
 }

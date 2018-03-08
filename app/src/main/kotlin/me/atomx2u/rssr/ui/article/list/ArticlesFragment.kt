@@ -15,13 +15,22 @@ import me.atomx2u.rssr.dagger.App
 import me.atomx2u.rssr.domain.Article
 import me.atomx2u.rssr.mvp.BaseFragment
 
-class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesContract.View {
+class ArticlesFragment
+    : BaseFragment<ArticlesContract.View, ArticlesContract.Presenter>() {
+
+    override val layoutRes: Int get() = R.layout.fragment_articles
+
+    override fun vView() = object : ArticlesContract.View {
+        override fun showArticles(_articles: List<Article>) {
+            (articles.adapter as? ArticleAdapter)?.data?.onNext(_articles)
+        }
+    }
+
+    override fun presenter(context: Context) =
+        ArticlesPresenter(vView,
+            (activity as MainActivity).navigator, (activity!!.applicationContext as App).repo)
 
     private val destroyDisposable = CompositeDisposable()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_articles, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,14 +43,6 @@ class ArticlesFragment : BaseFragment<ArticlesContract.Presenter>(), ArticlesCon
         articles.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         articles.adapter = adapter
         presenter.showArticles(arguments!!.getLong("feedId"))
-    }
-
-    override fun newPresenter(context: Context) =
-        ArticlesPresenter(this,
-            (activity as MainActivity).navigator, (activity!!.applicationContext as App).repo)
-
-    override fun showArticles(_articles: List<Article>) {
-        (articles.adapter as? ArticleAdapter)?.data?.onNext(_articles)
     }
 
     companion object {

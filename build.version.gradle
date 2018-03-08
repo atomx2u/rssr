@@ -1,3 +1,4 @@
 ext {
     kotlin_version = '1.2.30'
+    butter_knife_version = '8.8.1'
 }

@@ -14,10 +14,15 @@ import me.atomx2u.rssr.mvp.BaseFragment
 import me.atomx2u.rssr.mvp.MvpPresenter
 import me.atomx2u.rssr.mvp.MvpView
 
-class ArticleContentFragment : BaseFragment<MvpPresenter>(), MvpView {
+class ArticleContentFragment :
+    BaseFragment<MvpView, MvpPresenter>(), MvpView {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_article_content, container, false)
+    override val layoutRes: Int get() = R.layout.fragment_article_content
+
+    override fun vView() = object : MvpView {}
+
+    override fun presenter(context: Context): MvpPresenter {
+        return ArticleContentPresenter(this, (activity as MainActivity).navigator)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -28,8 +33,6 @@ class ArticleContentFragment : BaseFragment<MvpPresenter>(), MvpView {
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(link)
     }
-
-    override fun newPresenter(context: Context) = ArticleContentPresenter(this, (activity as MainActivity).navigator)
 
     companion object {
         val TAG: String = ArticleContentFragment::class.java.simpleName

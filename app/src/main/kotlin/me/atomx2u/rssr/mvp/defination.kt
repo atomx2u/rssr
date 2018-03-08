@@ -16,6 +16,10 @@ interface MvpPresenter {
     fun back()
 }
 
+interface AsDialog {
+    fun dismiss()
+}
+
 /**
  * P, V 联结的抽象
  * */

@@ -25,9 +25,7 @@ class DAOImpl() : DAO {
             .map { !it }
     }
 
-    // todo: insert 会失败吗？ - 做重复数据插入试试
-    // # dbflow 已知的缺陷？
-    // $ BaseRXModel 不支持多个表的事务。
+    // BaseRXModel 不支持多个表的事务。
     override fun insertFeedAndArticles(feedModel: FeedModel, articleModels: List<ArticleModel>): Completable {
         return Completable.create { emitter ->
             FlowManager.getDatabase(AppDatabase::class.java)
@@ -49,7 +47,7 @@ class DAOImpl() : DAO {
         return Completable.create { emitter ->
             FlowManager.getDatabase(AppDatabase::class.java)
                 .beginTransactionAsync { databaseWrapper ->
-                    innerGetArticles(feedId).list.delete(databaseWrapper).let { isSuccessful ->
+                    innerGetArticles(feedId).result?.delete(databaseWrapper)?.let { isSuccessful ->
                         if (!isSuccessful) {
                             throw Exception("invoke deleteFeedAndArticles(feedId = $feedId), delete articleModels fail.")
                         }

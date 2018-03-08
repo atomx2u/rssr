@@ -16,15 +16,21 @@ import java.util.concurrent.TimeUnit
 
 class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
-    val data: MutableList<FeedViewModel> = ArrayList()
-    // --- output
     fun onItemClick(): Observable<FeedViewModel> = onItemClickSubject.throttleFirst(50, TimeUnit.MICROSECONDS)
     fun onItemLongClick(): Observable<FeedViewModel> = onItemLongClickSubject.throttleFirst(50, TimeUnit.MICROSECONDS)
 
+    private val data: MutableList<FeedViewModel> = ArrayList()
     private var selectedPosition = -1
 
+    fun setData(data: List<FeedViewModel>) {
+        this.data.clear()
+        this.data.addAll(data)
+        selectedPosition = -1
+        notifyDataSetChanged()
+    }
+
     fun clearSelection() {
-        if (selectedPosition == -1)
+        if (selectedPosition < 0 || selectedPosition >= data.size)
             return
         data[selectedPosition] = data[selectedPosition].copy(isSelected = false)
         notifyItemChanged(selectedPosition)
@@ -34,10 +40,11 @@ class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<F
     fun setSelection(feed: FeedViewModel) {
         clearSelection()
         selectedPosition = data.indexOf(feed)
-        if (selectedPosition >= 0) {
-            data[selectedPosition] = data[selectedPosition].copy(isSelected = true)
-            notifyItemChanged(selectedPosition)
+        if (selectedPosition == -1 ) {
+           return
         }
+        data[selectedPosition] = data[selectedPosition].copy(isSelected = true)
+        notifyItemChanged(selectedPosition)
     }
 
     fun selectedItem() = if (selectedPosition < 0) null else data[selectedPosition]
