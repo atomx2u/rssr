@@ -1,7 +1,7 @@
-package me.atomx2u.rssr.data.component
+package me.atomx2u.rssr.domain.interactor.impl
 
 import io.reactivex.Completable
-import me.atomx2u.rssr.domain.component.FeedValidator
+import me.atomx2u.rssr.domain.interactor.feed.FeedValidator
 
 class FeedValidatorImpl : FeedValidator {
     override fun validateFeed(link: String): Completable {

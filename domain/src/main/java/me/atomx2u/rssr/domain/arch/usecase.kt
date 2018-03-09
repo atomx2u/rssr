@@ -1,42 +1,23 @@
 package me.atomx2u.rssr.domain.arch
 
-import io.reactivex.CompletableSource
-import io.reactivex.ObservableSource
+import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 
-/***
- * UseCase 是数据的业务抽象
- * */
-interface UseCase<R> {
-    fun execute(): ObservableSource<R>
+// UseCase 是业务抽象
+
+interface UcRequest {
+    object NONE : UcRequest
 }
 
-interface UseCaseWithRequest<in P : IRequest, R> {
-    fun execute(request: P): ObservableSource<R>
+interface ObservableUseCase<in RQ : UcRequest, RP : Any> {
+    fun execute(request: RQ): Observable<RP>
 }
 
-interface SingleUseCase<R> {
-    fun execute(): Single<R>
+interface SingleUseCase<in RQ : UcRequest, RP : Any> {
+    fun execute(request: RQ): Single<RP>
 }
 
-interface SingleUseCaseWithRequest<in P : IRequest, R> {
-    fun execute(request: P): Single<R>
+interface CompletableUseCase<in RQ : UcRequest> {
+    fun execute(request: RQ): Completable
 }
-
-interface CompletableUseCase {
-    fun execute(): CompletableSource
-}
-
-interface CompletableUse<in P> {
-    fun execute(request: P): CompletableSource
-}
-
-interface CompletableUseCaseWithRequest<in P : IRequest> {
-    fun execute(request: P): CompletableSource
-}
-
-interface SolvedCompletableUseCaseWithRequest<in P : IRequest> {
-    fun execute(request: P): CompletableSource
-}
-
-interface IRequest

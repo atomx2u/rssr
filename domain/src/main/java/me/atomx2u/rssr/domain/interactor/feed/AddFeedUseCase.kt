@@ -2,9 +2,8 @@ package me.atomx2u.rssr.domain.interactor.feed
 
 import io.reactivex.Completable
 import me.atomx2u.rssr.domain.Repository
-import me.atomx2u.rssr.domain.arch.IRequest
-import me.atomx2u.rssr.domain.arch.SolvedCompletableUseCaseWithRequest
-import me.atomx2u.rssr.domain.component.FeedValidator
+import me.atomx2u.rssr.domain.arch.CompletableUseCase
+import me.atomx2u.rssr.domain.arch.UcRequest
 
 /**
  * add a new feed source.watch out input scope.
@@ -13,13 +12,10 @@ import me.atomx2u.rssr.domain.component.FeedValidator
  * */
 class AddFeedUseCase(
     private val repo: Repository
-) : SolvedCompletableUseCaseWithRequest<AddFeedUseCase.Request> {
+) : CompletableUseCase<AddFeedUseCase.Request> {
 
-    override fun execute(request: Request): Completable =
-        repo.insertFeed(request.feedLink)
+    override fun execute(request: Request): Completable = repo.insertFeed(request.feedLink)
 
-    data class Request(
-        val feedLink: String
-    ) : IRequest
+    data class Request(val feedLink: String) : UcRequest
 }
 

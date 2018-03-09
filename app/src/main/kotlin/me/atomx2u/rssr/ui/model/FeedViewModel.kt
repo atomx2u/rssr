@@ -1,6 +1,6 @@
 package me.atomx2u.rssr.ui.model
 
-import me.atomx2u.rssr.domain.Feed
+import me.atomx2u.rssr.domain.model.Feed
 
 data class FeedViewModel(
     val id: Long,

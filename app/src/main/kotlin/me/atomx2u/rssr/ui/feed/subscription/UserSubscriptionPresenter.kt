@@ -1,7 +1,9 @@
 package me.atomx2u.rssr.ui.feed.subscription
 
-import me.atomx2u.rssr.domain.Feed
+import io.reactivex.android.schedulers.AndroidSchedulers
+import me.atomx2u.rssr.domain.model.Feed
 import me.atomx2u.rssr.domain.Repository
+import me.atomx2u.rssr.domain.arch.UcRequest
 import me.atomx2u.rssr.domain.interactor.feed.DeleteFeedUseCase
 import me.atomx2u.rssr.domain.interactor.feed.GetSubscribedFeedsUseCase
 import me.atomx2u.rssr.mvp.BasePresenter
@@ -23,8 +25,9 @@ class UserSubscriptionPresenter(
     }
 
     override fun updateFavoriteFeedSubscriptions() {
-        getSubscribedFeedsUseCase.execute()
+        getSubscribedFeedsUseCase.execute(UcRequest.NONE)
             .map { it.map(Feed::toViewModel) }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(::onUpdateFeedSubscriptionsSuccess)
     }
 

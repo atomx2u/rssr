@@ -1,12 +1,13 @@
 package me.atomx2u.rssr.domain.interactor.feed
 
-import me.atomx2u.rssr.domain.Feed
+import me.atomx2u.rssr.domain.model.Feed
 import me.atomx2u.rssr.domain.Repository
 import me.atomx2u.rssr.domain.arch.SingleUseCase
+import me.atomx2u.rssr.domain.arch.UcRequest
 
 class GetSubscribedFeedsUseCase(
     private val repo: Repository
-) : SingleUseCase<List<Feed>> {
+) : SingleUseCase<UcRequest.NONE, List<Feed>> {
 
-    override fun execute() = repo.getSubscribedFeeds()
+    override fun execute(request: UcRequest.NONE) = repo.getSubscribedFeeds()
 }

@@ -4,14 +4,13 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import butterknife.BindView
 import butterknife.OnClick
 import kotlinx.android.synthetic.main.fragment_add_feed.*
 import me.atomx2u.rssr.MainActivity
 import me.atomx2u.rssr.R
 import me.atomx2u.rssr.dagger.App
 import me.atomx2u.rssr.mvp.BaseDialogFragment
-import me.atomx2u.rssr.data.component.FeedValidatorImpl
+import me.atomx2u.rssr.domain.interactor.impl.FeedValidatorImpl
 import me.atomx2u.rssr.util.defaultMetrics
 import me.atomx2u.rssr.ui.feed.subscription.UserSubscriptionFragment
 import java.lang.ref.WeakReference

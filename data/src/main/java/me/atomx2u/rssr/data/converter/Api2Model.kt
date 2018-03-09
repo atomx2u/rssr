@@ -1,11 +1,9 @@
 package me.atomx2u.rssr.data.converter
 
-import com.einmalfel.earl.Feed
-import com.einmalfel.earl.Item
 import me.atomx2u.rssr.data.database.model.ArticleModel
 import me.atomx2u.rssr.data.database.model.FeedModel
 
-fun Feed.toModel(
+internal fun com.einmalfel.earl.Feed.toModel(
     feedLink: String,
     currentTime: Long
 ): Pair<FeedModel, List<ArticleModel>> {
@@ -16,7 +14,7 @@ fun Feed.toModel(
         pageLink = link ?: "",
         title = title,
         description = description ?: ""
-    ) to items.map { item: Item -> with(item) {
+    ) to items.map { item: com.einmalfel.earl.Item -> with(item) {
         ArticleModel(
             imageLink = imageLink ?: "",
             link = link ?: "",

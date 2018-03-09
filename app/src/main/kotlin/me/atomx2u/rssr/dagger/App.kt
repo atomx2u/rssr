@@ -1,10 +1,11 @@
 package me.atomx2u.rssr.dagger
 
 import android.app.Application
+import io.reactivex.schedulers.Schedulers
 import me.atomx2u.rssr.data.DataModule
 import me.atomx2u.rssr.data.RepositoryImpl
 import me.atomx2u.rssr.data.database.DAOImpl
-import me.atomx2u.rssr.data.preference.Prefs
+import me.atomx2u.rssr.data.pref.Prefs
 import me.atomx2u.rssr.data.service.ServiceImpl
 import me.atomx2u.rssr.data.util.TimeUtils
 import me.atomx2u.rssr.data.util.TimeUtilsImpl
@@ -22,6 +23,15 @@ class App : Application() {
         // context 需要在生命周期中调用，构造器中不能调用（还没有初始化好）
         prefs = Prefs(this)
         timeUtils = TimeUtilsImpl()
-        repo = RepositoryImpl(DAOImpl(), ServiceImpl(), prefs, timeUtils)
+        repo = RepositoryImpl(
+            DAOImpl(Schedulers.io(), Schedulers.single()),
+            ServiceImpl(),
+            prefs,
+            timeUtils)
+        instance = this
+    }
+
+    companion object {
+        var instance: App? = null
     }
 }

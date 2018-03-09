@@ -1,8 +1,8 @@
 package me.atomx2u.rssr.domain.interactor.feed
 
 import me.atomx2u.rssr.domain.Repository
-import me.atomx2u.rssr.domain.arch.IRequest
-import me.atomx2u.rssr.domain.arch.SingleUseCaseWithRequest
+import me.atomx2u.rssr.domain.arch.SingleUseCase
+import me.atomx2u.rssr.domain.arch.UcRequest
 
 /**
  * judge whether a feed subscribed or not.
@@ -11,11 +11,9 @@ import me.atomx2u.rssr.domain.arch.SingleUseCaseWithRequest
  * */
 class IsFeedSubscribedUseCase(
     private val repo: Repository
-) : SingleUseCaseWithRequest<IsFeedSubscribedUseCase.Request, Boolean> {
+) : SingleUseCase<IsFeedSubscribedUseCase.Request, Boolean> {
 
     override fun execute(request: Request) = repo.doesFeedExists(request.link)
 
-    data class Request(
-        val link: String
-    ) : IRequest
+    data class Request(val link: String) : UcRequest
 }

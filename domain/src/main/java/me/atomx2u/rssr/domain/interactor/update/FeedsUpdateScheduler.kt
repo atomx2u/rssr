@@ -1,4 +1,4 @@
-package me.atomx2u.rssr.domain.component
+package me.atomx2u.rssr.domain.interactor.update
 
 interface FeedsUpdateScheduler {
     fun enableFeedsUpdate()

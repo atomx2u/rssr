@@ -5,7 +5,9 @@ import com.raizlabs.android.dbflow.kotlinextensions.*
 import com.raizlabs.android.dbflow.rx2.kotlinextensions.list
 import com.raizlabs.android.dbflow.rx2.kotlinextensions.result
 import com.raizlabs.android.dbflow.rx2.kotlinextensions.rx
+import com.raizlabs.android.dbflow.sql.language.SQLite
 import io.reactivex.Completable
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import me.atomx2u.rssr.data.converter.toDomain
 import me.atomx2u.rssr.data.database.definition.AppDatabase
@@ -13,11 +15,14 @@ import me.atomx2u.rssr.data.database.model.ArticleModel
 import me.atomx2u.rssr.data.database.model.ArticleModel_Table
 import me.atomx2u.rssr.data.database.model.FeedModel
 import me.atomx2u.rssr.data.database.model.FeedModel_Table
-import me.atomx2u.rssr.domain.Article
-import me.atomx2u.rssr.domain.Feed
+import me.atomx2u.rssr.domain.model.Article
+import me.atomx2u.rssr.domain.model.Feed
 
-class DAOImpl() : DAO {
-
+// TODO: 数据库 upgrade
+class DAOImpl(
+    private val readScheduler: Scheduler,
+    private val writeScheduler: Scheduler
+) : DAO {
     override fun doesFeedExists(link: String): Single<Boolean> {
         return (select from FeedModel::class where (FeedModel_Table.feedLink `is` link))
             .rx().result
@@ -39,7 +44,7 @@ class DAOImpl() : DAO {
                 .success { emitter.onComplete() }
                 .error { _, error -> emitter.onError(error) }
                 .execute()
-        }
+        }.subscribeOn(writeScheduler)
     }
 
     // $ 使用外键后，删除已经要先删除外键引用。
@@ -61,21 +66,22 @@ class DAOImpl() : DAO {
                 .success { emitter.onComplete() }
                 .error { _, error -> emitter.onError(error) }
                 .execute()
-        }
+        }.subscribeOn(writeScheduler)
     }
 
     override fun getFeed(feedId: Long): Single<Feed> {
         return Single.fromCallable {
             innerGetFeed(feedId).result!!.toDomain()
-        }
+        }.subscribeOn(readScheduler)
     }
 
     // # model to domain 的开销还是挺大的，能减小这种开销吗？
     // $ 目前没发现办法。但是这个开销应该可以可以接受的。
-    override fun getAllFeeds(): Single<List<me.atomx2u.rssr.domain.Feed>> {
+    override fun getAllFeeds(): Single<List<Feed>> {
         return (select from FeedModel::class)
             .rx().list
             .map { feedModels -> feedModels.map { it.toDomain() } }
+            .subscribeOn(readScheduler)
     }
 
     override fun updateFeedAndArticles(feedId: Long, feedModel: FeedModel, articleModels: List<ArticleModel>): Completable {
@@ -98,19 +104,19 @@ class DAOImpl() : DAO {
                 .success { emitter.onComplete() }
                 .error { _, error -> emitter.onError(error) }
                 .execute()
-        }
+        }.subscribeOn(writeScheduler)
     }
 
     override fun getAllArticles(): Single<List<Article>> {
         return innerGetAllArticles().rx().list.map { articleModels ->
             articleModels.map { articleModel -> articleModel.toDomain() }
-        }
+        }.subscribeOn(readScheduler)
     }
 
     override fun getArticles(feedId: Long): Single<List<Article>> {
         return innerGetArticles(feedId).rx().list.map { articleModels ->
             articleModels.map { articleModel -> articleModel.toDomain() }
-        }
+        }.subscribeOn(readScheduler)
     }
 
     override fun markArticleAsRead(articleId: Long): Completable {
@@ -122,7 +128,22 @@ class DAOImpl() : DAO {
                     }
                 }
             }
-        }
+        }.subscribeOn(writeScheduler)
+    }
+
+    override fun setFavoriteToArticle(articleId: Long, isFavorite: Boolean): Completable {
+        return Completable.fromCallable {
+            SQLite.update(ArticleModel::class.java)
+                .set(ArticleModel_Table.isFavorite.eq(isFavorite))
+                .where(ArticleModel_Table._id.eq(articleId))
+                .execute()
+        }.subscribeOn(writeScheduler)
+    }
+
+    override fun getFavoriteArticles(): Single<List<Article>> {
+        return(select from ArticleModel::class where (ArticleModel_Table.isFavorite `is` true))
+            .rx().list.map{ articleModels -> articleModels.map(ArticleModel::toDomain) }
+            .subscribeOn(readScheduler)
     }
 
     private fun innerGetAllArticles() = (select from ArticleModel::class)

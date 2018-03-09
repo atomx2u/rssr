@@ -1,4 +1,4 @@
-package me.atomx2u.rssr.data.preference
+package me.atomx2u.rssr.data.pref
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE

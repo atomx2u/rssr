@@ -32,6 +32,9 @@ class ArticleModel(
     pubDate: Long = 0,
 
     @Column var
-    isRead: Boolean = false
+    isRead: Boolean = false,
+
+    @Column var
+    isFavorite: Boolean = false
 
 ) : BaseModel()

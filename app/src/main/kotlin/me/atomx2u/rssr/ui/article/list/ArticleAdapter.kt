@@ -6,25 +6,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.OnClick
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import me.atomx2u.rssr.R
-import me.atomx2u.rssr.domain.Article
+import me.atomx2u.rssr.domain.model.Article
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
 
-    val data: BehaviorSubject<List<Article>> = BehaviorSubject.createDefault(emptyList())
+    val data: MutableList<Article> = LinkedList()
 
-    fun onItemClick(): Observable<Article> = onItemClickSubject.throttleFirst(50, TimeUnit.SECONDS)
+    fun onItemClick(): Observable<Article> = itemClickSubject.throttleFirst(50, TimeUnit.MILLISECONDS)
+    fun onFavoriteClick(): Observable<Article> = favouriteClickSubject.throttleFirst(50, TimeUnit.MILLISECONDS)
+        .doOnNext(::toggleArticleFavoriteStatus)
 
-    init {
-        data.subscribe {
-            notifyDataSetChanged()
-        }
+    fun addData(data: List<Article>) {
+        val start = this.data.size
+        val count = data.count()
+        this.data.addAll(data)
+        notifyItemRangeInserted(start, count)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
@@ -33,35 +40,62 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() 
         )
     }
 
-    override fun getItemCount() = data.value.size
+    override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-        holder.setArticle(data.value[position])
+        holder.setArticle(data[position])
     }
 
-    private val onItemClickSubject = PublishSubject.create<Article>()
+    private val itemClickSubject = PublishRelay.create<Article>()
+    private val favouriteClickSubject = PublishRelay.create<Article>()
     private val dateFormatter = SimpleDateFormat("YYYY-MM-dd", Locale.SIMPLIFIED_CHINESE)
     private fun Long.formatDate(): String {
         return dateFormatter.format(Date(this))
     }
 
+    private fun toggleArticleFavoriteStatus(article: Article) {
+        val index = data.indexOf(article)
+        val newValue = article.copy(isFavorite = !article.isFavorite)
+        data[index] = newValue
+        notifyItemChanged(index)
+    }
+
     inner class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.article_title)
-        val date: TextView = itemView.findViewById(R.id.article_date)
-        val newIndicator: TextView = itemView.findViewById(R.id.article_new_indicator)
-        val favouriteIndicator: ImageView = itemView.findViewById(R.id.article_favourite_indicator)
+
+        @BindView(R.id.article_title)
+        lateinit var title: TextView
+
+        @BindView(R.id.article_date)
+        lateinit var  date: TextView
+
+        @BindView(R.id.article_new_indicator)
+        lateinit var  newIndicator: TextView
+
+        @BindView(R.id.article_favourite_indicator)
+        lateinit var favouriteIndicator: ImageView
 
         init {
-            itemView.setOnClickListener {
-                onItemClickSubject.onNext(data.value[adapterPosition])
-            }
+            ButterKnife.bind(this, itemView)
         }
 
         fun setArticle(article: Article) {
             title.text = article.title
             date.text = article.pubDate.formatDate()
             newIndicator // TODO
-            favouriteIndicator
+            favouriteIndicator.setImageResource(
+                if (article.isFavorite) R.drawable.ic_favorite
+                else R.drawable.ic_not_favorite
+            )
+        }
+
+        @OnClick(R.id.article_content_container)
+        fun onArticleClick() {
+            itemClickSubject.accept(data[adapterPosition])
+        }
+
+        @OnClick(R.id.article_favourite_indicator)
+        fun onFeedFavouriteArticleClick() {
+            favouriteClickSubject.accept(data[adapterPosition])
         }
     }
 }

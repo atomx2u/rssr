@@ -2,14 +2,15 @@ package me.atomx2u.rssr.ui.feed.addition
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import me.atomx2u.rssr.dagger.App
 import me.atomx2u.rssr.mvp.BasePresenter
 import me.atomx2u.rssr.data.RepositoryImpl
 import me.atomx2u.rssr.data.database.DAOImpl
-import me.atomx2u.rssr.data.preference.Prefs
+import me.atomx2u.rssr.data.pref.Prefs
 import me.atomx2u.rssr.data.service.ServiceImpl
 import me.atomx2u.rssr.data.util.TimeUtils
 import me.atomx2u.rssr.domain.Repository
-import me.atomx2u.rssr.domain.component.FeedValidator
+import me.atomx2u.rssr.domain.interactor.feed.FeedValidator
 import me.atomx2u.rssr.domain.interactor.feed.AddFeedUseCase
 import me.atomx2u.rssr.domain.interactor.feed.IsFeedSubscribedUseCase
 import me.atomx2u.rssr.ui.Navigator
@@ -30,8 +31,7 @@ class AddFeedPresenter(
     private val isFeedSubscribedUseCase: IsFeedSubscribedUseCase
 
     init {
-        repo = RepositoryImpl(
-            DAOImpl(), ServiceImpl(), prefs, timeUtils)
+        repo = App.instance!!.repo
         addFeedUseCase = AddFeedUseCase(repo)
         isFeedSubscribedUseCase = IsFeedSubscribedUseCase(repo)
     }
@@ -52,13 +52,12 @@ class AddFeedPresenter(
 
     override fun back() {
         view.get()?.dismiss()
-        navigator.back()
     }
 
     private fun onAddNewFeedSubscriptionComplete() {
         view.get()?.switchLoading(false)
-        navigator.back()
         onNewFeedAdded?.get()?.onNewFeedAdded()
+        back()
     }
 
     private fun onAddNewFeedSubscriptionError(t: Throwable?) {
