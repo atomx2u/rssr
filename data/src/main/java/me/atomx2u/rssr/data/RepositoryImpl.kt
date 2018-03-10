@@ -2,8 +2,7 @@ package me.atomx2u.rssr.data
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.zipWith
-import me.atomx2u.rssr.data.converter.toModel
+import me.atomx2u.rssr.data.converter.toModelPair
 import me.atomx2u.rssr.data.database.DAO
 import me.atomx2u.rssr.data.database.model.ArticleModel
 import me.atomx2u.rssr.data.database.model.FeedModel
@@ -12,9 +11,8 @@ import me.atomx2u.rssr.data.service.Service
 import me.atomx2u.rssr.data.util.TimeUtils
 import me.atomx2u.rssr.domain.model.Article
 import me.atomx2u.rssr.domain.model.Feed
-import me.atomx2u.rssr.domain.Repository
+import me.atomx2u.rssr.domain.repository.Repository
 
-// todo 自动更新 feed
 // 校验形的错误应该给出 UI 上的提示
 class RepositoryImpl(
     private val dao: DAO,
@@ -30,7 +28,7 @@ class RepositoryImpl(
     override fun insertFeed(link: String): Completable {
          return service.fetchFeed(link)
              .map { feed: com.einmalfel.earl.Feed ->
-                 feed.toModel(link, timeUtils.getCurrentTime())
+                 feed.toModelPair(link, timeUtils.getCurrentTime())
              }.flatMapCompletable { (feedModel: FeedModel, articleModels: List<ArticleModel>) ->
                  dao.insertFeedAndArticles(feedModel, articleModels)
              }
@@ -52,32 +50,37 @@ class RepositoryImpl(
         return dao.markArticleAsRead(articleId)
     }
 
-    override fun isAutoFeedsUpdateEnabled(): Single<Boolean> {
-        return Single.fromCallable { prefs.getIsAutoFeedsUpdateEnabled() }
-    }
-
-    override fun setAutoFeedsUpdate(isEnabled: Boolean): Completable {
-        return Single.fromCallable {
-            if (!prefs.setIsAutoFeedsUpdateEnabled(isEnabled))
-                throw Exception("invoke setAutoFeedsUpdate(isEnabled = $isEnabled) fail.")
-        }.toCompletable()
-    }
-
-    override fun updateFeed(feedId: Long): Completable {
-        return dao.getFeed(feedId).flatMap { feed ->
-            service.fetchFeed(feed.feedLink).zipWith(Single.just(feed.feedLink))
-        }.map { (feed: com.einmalfel.earl.Feed, feedLink: String) ->
-            feed.toModel(feedLink, timeUtils.getCurrentTime())
-        }.flatMapCompletable { (feedModel: FeedModel, articleModels: List<ArticleModel>) ->
-            dao.insertFeedAndArticles(feedModel, articleModels)
-        }
-    }
-
     override fun setFavoriteToArticle(articleId: Long, isFavorite: Boolean): Completable {
         return dao.setFavoriteToArticle(articleId, isFavorite)
     }
 
     override fun getFavoriteArticles(): Single<List<Article>> {
         return dao.getFavoriteArticles()
+    }
+
+    override fun pullArticlesForFeedFromOrigin(feed: Feed): Completable {
+        return service.fetchFeed(feed.feedLink).map { apiFeed: com.einmalfel.earl.Feed ->
+            apiFeed.toModelPair(feed.feedLink, timeUtils.getCurrentTime())
+        }.flatMapCompletable { (feedModel: FeedModel, articleModels: List<ArticleModel>) ->
+            dao.updateFeedAndArticles(feed.id, feedModel, articleModels)
+        }
+//        dao.getFeed(feedId).flatMap { feed ->
+//            service.fetchFeed(feed.feedLink).zipWith(Single.just(feed.feedLink))
+//        }.map { (feed: com.einmalfel.earl.Feed, feedLink: String) ->
+//            feed.toModelPair(feedLink, timeUtils.getCurrentTime())
+//        }.flatMapCompletable { (feedModel: FeedModel, articleModels: List<ArticleModel>) ->
+//            dao.insertFeedAndArticles(feedModel, articleModels)
+//        }
+    }
+
+    override fun shouldUpdateFeedsInBackground(): Single<Boolean> {
+        return Single.fromCallable { prefs.shouldUpdateFeedsInBackground() }
+    }
+
+    override fun setShouldUpdateFeedsInBackground(shouldUpdate: Boolean): Completable {
+        return Single.fromCallable {
+            if (!prefs.setShouldUpdateFeedsInBackground(shouldUpdate))
+                throw Exception("invoke setAutoFeedsUpdate(isEnabled = $shouldUpdate) fail.")
+        }.toCompletable()
     }
 }

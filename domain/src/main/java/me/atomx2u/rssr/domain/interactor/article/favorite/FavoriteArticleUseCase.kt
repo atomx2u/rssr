@@ -1,7 +1,7 @@
 package me.atomx2u.rssr.domain.interactor.article.favorite
 
 import io.reactivex.Completable
-import me.atomx2u.rssr.domain.Repository
+import me.atomx2u.rssr.domain.repository.Repository
 import me.atomx2u.rssr.domain.arch.CompletableUseCase
 import me.atomx2u.rssr.domain.arch.UcRequest
 

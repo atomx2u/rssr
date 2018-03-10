@@ -2,7 +2,7 @@ package me.atomx2u.rssr.ui.feed.subscription
 
 import io.reactivex.android.schedulers.AndroidSchedulers
 import me.atomx2u.rssr.domain.model.Feed
-import me.atomx2u.rssr.domain.Repository
+import me.atomx2u.rssr.domain.repository.Repository
 import me.atomx2u.rssr.domain.arch.UcRequest
 import me.atomx2u.rssr.domain.interactor.feed.DeleteFeedUseCase
 import me.atomx2u.rssr.domain.interactor.feed.GetSubscribedFeedsUseCase

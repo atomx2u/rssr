@@ -4,12 +4,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import me.atomx2u.rssr.dagger.App
 import me.atomx2u.rssr.mvp.BasePresenter
-import me.atomx2u.rssr.data.RepositoryImpl
-import me.atomx2u.rssr.data.database.DAOImpl
 import me.atomx2u.rssr.data.pref.Prefs
-import me.atomx2u.rssr.data.service.ServiceImpl
 import me.atomx2u.rssr.data.util.TimeUtils
-import me.atomx2u.rssr.domain.Repository
+import me.atomx2u.rssr.domain.repository.Repository
 import me.atomx2u.rssr.domain.interactor.feed.FeedValidator
 import me.atomx2u.rssr.domain.interactor.feed.AddFeedUseCase
 import me.atomx2u.rssr.domain.interactor.feed.IsFeedSubscribedUseCase

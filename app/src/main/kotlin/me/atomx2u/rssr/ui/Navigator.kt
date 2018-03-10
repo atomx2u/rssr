@@ -8,6 +8,7 @@ import me.atomx2u.rssr.ui.article.content.ArticleContentFragment
 import me.atomx2u.rssr.ui.article.list.ArticlesFragment
 import me.atomx2u.rssr.ui.feed.addition.AddFeedFragment
 
+// TODO reuse fragment
 class Navigator(
     private val activity: AppCompatActivity,
     private val fragmentManager: android.support.v4.app.FragmentManager

@@ -3,7 +3,7 @@ package me.atomx2u.rssr.ui.article.list
 import android.util.Log
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
-import me.atomx2u.rssr.domain.Repository
+import me.atomx2u.rssr.domain.repository.Repository
 import me.atomx2u.rssr.domain.interactor.article.GetArticlesUseCase
 import me.atomx2u.rssr.domain.interactor.article.favorite.FavoriteArticleUseCase
 import me.atomx2u.rssr.domain.interactor.article.favorite.UnFavoriteArticleUseCase

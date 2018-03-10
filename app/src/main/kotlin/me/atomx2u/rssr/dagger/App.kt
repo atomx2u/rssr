@@ -9,7 +9,7 @@ import me.atomx2u.rssr.data.pref.Prefs
 import me.atomx2u.rssr.data.service.ServiceImpl
 import me.atomx2u.rssr.data.util.TimeUtils
 import me.atomx2u.rssr.data.util.TimeUtilsImpl
-import me.atomx2u.rssr.domain.Repository
+import me.atomx2u.rssr.domain.repository.Repository
 
 class App : Application() {
 

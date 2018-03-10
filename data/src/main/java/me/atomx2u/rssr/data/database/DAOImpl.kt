@@ -19,6 +19,9 @@ import me.atomx2u.rssr.domain.model.Article
 import me.atomx2u.rssr.domain.model.Feed
 
 // TODO: 数据库 upgrade
+// model to domain 是有开销的
+// 使用外键后，删除已经要先删除外键引用。
+// BaseRXModel 不支持多个表的事务。
 class DAOImpl(
     private val readScheduler: Scheduler,
     private val writeScheduler: Scheduler
@@ -30,7 +33,6 @@ class DAOImpl(
             .map { !it }
     }
 
-    // BaseRXModel 不支持多个表的事务。
     override fun insertFeedAndArticles(feedModel: FeedModel, articleModels: List<ArticleModel>): Completable {
         return Completable.create { emitter ->
             FlowManager.getDatabase(AppDatabase::class.java)
@@ -47,7 +49,6 @@ class DAOImpl(
         }.subscribeOn(writeScheduler)
     }
 
-    // $ 使用外键后，删除已经要先删除外键引用。
     override fun deleteFeedAndArticles(feedId: Long): Completable {
         return Completable.create { emitter ->
             FlowManager.getDatabase(AppDatabase::class.java)
@@ -75,8 +76,7 @@ class DAOImpl(
         }.subscribeOn(readScheduler)
     }
 
-    // # model to domain 的开销还是挺大的，能减小这种开销吗？
-    // $ 目前没发现办法。但是这个开销应该可以可以接受的。
+
     override fun getAllFeeds(): Single<List<Feed>> {
         return (select from FeedModel::class)
             .rx().list

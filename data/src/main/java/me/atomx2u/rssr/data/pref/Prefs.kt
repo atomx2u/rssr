@@ -7,10 +7,10 @@ class Prefs(context: Context) {
 
     private val prefs = context.getSharedPreferences(FILE_NAME, MODE_PRIVATE)
 
-    fun getIsAutoFeedsUpdateEnabled() =
+    fun shouldUpdateFeedsInBackground() =
         prefs.getBoolean(IS_AUTO_FEEDS_UPDATE_ENABLED, false)
 
-    fun setIsAutoFeedsUpdateEnabled(value: Boolean) =
+    fun setShouldUpdateFeedsInBackground(value: Boolean) =
         prefs.edit().putBoolean(IS_AUTO_FEEDS_UPDATE_ENABLED, value).commit()
 
     companion object {
