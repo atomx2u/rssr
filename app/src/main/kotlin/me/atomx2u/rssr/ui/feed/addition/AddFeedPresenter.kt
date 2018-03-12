@@ -23,14 +23,14 @@ class AddFeedPresenter(
 
     var onNewFeedAdded: WeakReference<OnNewFeedAdded>? = null
 
-    private val repo: Repository
+    private val repo: Repository? = null
     private val addFeedUseCase: AddFeedUseCase
     private val isFeedSubscribedUseCase: IsFeedSubscribedUseCase
 
     init {
-        repo = App.instance!!.repo
-        addFeedUseCase = AddFeedUseCase(repo)
-        isFeedSubscribedUseCase = IsFeedSubscribedUseCase(repo)
+//        repo =
+        addFeedUseCase = AddFeedUseCase(repo!!)
+        isFeedSubscribedUseCase = IsFeedSubscribedUseCase(repo!!)
     }
 
     override fun addNewFeedSubscription(feedLink: String) {

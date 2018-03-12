@@ -1,6 +1,7 @@
 package me.atomx2u.rssr
 
 import android.os.Bundle
+import dagger.android.AndroidInjection
 import me.atomx2u.rssr.mvp.BaseActivity
 import me.atomx2u.rssr.mvp.BasePresenter
 import me.atomx2u.rssr.mvp.MvpPresenter
@@ -12,9 +13,9 @@ class MainActivity : BaseActivity<MvpView, MvpPresenter>(), MvpView {
 
     override val layoutRes: Int get() = R.layout.activity_main
 
-    override fun vView() = object : MvpView {}
-
-    override fun presenter() = object: BasePresenter<MvpView>(this) {}
+//    override fun vView() = object : MvpView {}
+//
+//    override fun presenter() =
 
     val navigator = Navigator(this, supportFragmentManager)
 
@@ -25,4 +26,6 @@ class MainActivity : BaseActivity<MvpView, MvpPresenter>(), MvpView {
             .add(R.id.activity_container, UserSubscriptionFragment(), UserSubscriptionFragment.TAG)
             .commit()
     }
+
+    override fun inject() = AndroidInjection.inject(this)
 }

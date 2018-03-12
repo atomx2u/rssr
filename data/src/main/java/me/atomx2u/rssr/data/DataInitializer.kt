@@ -2,9 +2,9 @@ package me.atomx2u.rssr.data
 
 import android.content.Context
 
-class DataModule {
+class DataInitializer {
     companion object {
-        fun install(context: Context) {
+        fun init(context: Context) {
             com.raizlabs.android.dbflow.config.FlowManager.init(context)
         }
     }

@@ -2,10 +2,10 @@ package me.atomx2u.rssr.dagger
 
 import javax.inject.Scope
 
-@Retention
 @Scope
+@Retention
 annotation class ActivityScope
 
-@Retention
 @Scope
+@Retention
 annotation class FragmentScope

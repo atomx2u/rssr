@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -22,6 +24,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.internal.functions.Functions
 import java.lang.ref.WeakReference
 import java.util.*
+import javax.inject.Inject
 
 abstract class BasePresenter<View : MvpView>(view: View) : MvpPresenter {
     val view: WeakReference<View> = WeakReference(view)
@@ -52,12 +55,13 @@ abstract class BaseActivity<VView: MvpView, Presenter : MvpPresenter>
     : AppCompatActivity(), MvpNexus {
 
     lateinit var vView: VView
+    @Inject
     lateinit var presenter: Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        inject()
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
-        presenter = presenter()
         presenter.create()
     }
 
@@ -87,8 +91,7 @@ abstract class BaseActivity<VView: MvpView, Presenter : MvpPresenter>
     final override fun onBack() = onBackPressed()
 
     abstract val layoutRes: Int
-    abstract fun vView(): VView
-    abstract fun presenter(): Presenter
+    abstract fun inject()
 }
 
 /**

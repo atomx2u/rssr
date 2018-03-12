@@ -26,7 +26,7 @@ class ArticlesFragment
 
     override fun presenter(context: Context) =
         ArticlesPresenter(vView,
-            (activity as MainActivity).navigator, (activity!!.applicationContext as App).repo)
+            (activity as MainActivity).navigator, App.instance.repo)
 
     private val destroyDisposable = CompositeDisposable()
 

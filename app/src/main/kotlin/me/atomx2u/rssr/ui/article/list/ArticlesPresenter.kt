@@ -19,9 +19,9 @@ class ArticlesPresenter(
 
     var feedId: Long? = null
 
-    private val getArticlesUseCase = GetArticlesUseCase(repo)
-    private val favoriteArticleUseCase = FavoriteArticleUseCase(repo)
-    private val unFavoriteArticleUseCase = UnFavoriteArticleUseCase(repo)
+    private val getArticlesUseCase = GetArticlesUseCase(repo!!)
+    private val favoriteArticleUseCase = FavoriteArticleUseCase(repo!!)
+    private val unFavoriteArticleUseCase = UnFavoriteArticleUseCase(repo!!)
 
     override fun back() {
         navigator.back()
