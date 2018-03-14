@@ -1,24 +1,25 @@
 package me.atomx2u.rssr.ui.feed.subscription
 
 import io.reactivex.android.schedulers.AndroidSchedulers
-import me.atomx2u.rssr.domain.model.Feed
-import me.atomx2u.rssr.domain.repository.Repository
 import me.atomx2u.rssr.domain.arch.UcRequest
 import me.atomx2u.rssr.domain.interactor.feed.DeleteFeedUseCase
 import me.atomx2u.rssr.domain.interactor.feed.GetSubscribedFeedsUseCase
+import me.atomx2u.rssr.domain.model.Feed
 import me.atomx2u.rssr.mvp.BasePresenter
 import me.atomx2u.rssr.ui.Navigator
-import me.atomx2u.rssr.ui.model.FeedViewModel
-import me.atomx2u.rssr.ui.model.toViewModel
+import me.atomx2u.rssr.ui.feed.FeedViewModel
+import me.atomx2u.rssr.ui.feed.toViewModel
+import javax.inject.Inject
 
-class UserSubscriptionPresenter(
+class UserSubscriptionPresenter @Inject constructor(
     view: UserSubscriptionContract.View,
-    repo: Repository,
     private val navigator: Navigator
 ) : BasePresenter<UserSubscriptionContract.View>(view), UserSubscriptionContract.Presenter {
 
-    private val getSubscribedFeedsUseCase = GetSubscribedFeedsUseCase(repo)
-    private val deleteFeedUseCase = DeleteFeedUseCase(repo)
+    @Inject
+    lateinit var getSubscribedFeedsUseCase: GetSubscribedFeedsUseCase
+    @Inject
+    lateinit var deleteFeedUseCase: DeleteFeedUseCase
 
     override fun back() {
         navigator.back()

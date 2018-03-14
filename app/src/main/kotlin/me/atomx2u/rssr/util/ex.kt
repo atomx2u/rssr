@@ -1,8 +1,8 @@
 package me.atomx2u.rssr.util
 
 import android.app.Activity
-import android.support.v4.app.Fragment
 import android.content.Context
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
 import android.widget.Toast

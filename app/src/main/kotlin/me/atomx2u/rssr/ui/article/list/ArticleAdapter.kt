@@ -11,15 +11,14 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import me.atomx2u.rssr.R
 import me.atomx2u.rssr.domain.model.Article
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
+class ArticleAdapter @Inject constructor(): RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
 
     val data: MutableList<Article> = LinkedList()
 
@@ -66,10 +65,10 @@ class ArticleAdapter : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() 
         lateinit var title: TextView
 
         @BindView(R.id.article_date)
-        lateinit var  date: TextView
+        lateinit var date: TextView
 
         @BindView(R.id.article_new_indicator)
-        lateinit var  newIndicator: TextView
+        lateinit var newIndicator: TextView
 
         @BindView(R.id.article_favourite_indicator)
         lateinit var favouriteIndicator: ImageView

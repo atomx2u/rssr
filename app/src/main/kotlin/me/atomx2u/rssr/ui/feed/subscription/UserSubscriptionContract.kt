@@ -2,7 +2,7 @@ package me.atomx2u.rssr.ui.feed.subscription
 
 import me.atomx2u.rssr.mvp.MvpPresenter
 import me.atomx2u.rssr.mvp.MvpView
-import me.atomx2u.rssr.ui.model.FeedViewModel
+import me.atomx2u.rssr.ui.feed.FeedViewModel
 
 interface UserSubscriptionContract {
 

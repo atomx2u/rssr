@@ -10,18 +10,12 @@ import me.atomx2u.rssr.ui.feed.addition.AddFeedFragment
 
 // TODO reuse fragment
 class Navigator(
-    private val activity: AppCompatActivity,
-    private val fragmentManager: android.support.v4.app.FragmentManager
+    private val activity: AppCompatActivity
 ) {
+    private val fragmentManager = activity.supportFragmentManager
 
     fun showAddFeed() {
-        // 并不会加入 back stack
         AddFeedFragment.new().show(fragmentManager, AddFeedFragment.TAG)
-//        AddFeedFragment.new().let {
-//            fragmentManager.beginTransaction().add(it, AddFeedFragment.TAG)
-//                .addToBackStack(AddFeedFragment.TAG)
-//                .commit()
-//        }
     }
 
     fun showArticles(feedId: Long) {
@@ -33,7 +27,7 @@ class Navigator(
     }
 
     fun showArticleDetail(link: String) {
-        val fragment = ArticleContentFragment.newInstance()
+        val fragment = ArticleContentFragment.new()
         fragment.arguments = Bundle().apply {
             putString("link", link)
         }

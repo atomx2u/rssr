@@ -1,8 +1,8 @@
 package me.atomx2u.rssr.ui.feed.addition
 
 import me.atomx2u.rssr.mvp.AsDialog
-import me.atomx2u.rssr.mvp.MvpView
 import me.atomx2u.rssr.mvp.MvpPresenter
+import me.atomx2u.rssr.mvp.MvpView
 
 interface AddFeedContract {
 

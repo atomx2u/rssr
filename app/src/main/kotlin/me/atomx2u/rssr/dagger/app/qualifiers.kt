@@ -1,4 +1,4 @@
-package me.atomx2u.rssr.dagger
+package me.atomx2u.rssr.dagger.app
 
 import javax.inject.Qualifier
 

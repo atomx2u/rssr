@@ -1,4 +1,4 @@
-package me.atomx2u.rssr.ui.model
+package me.atomx2u.rssr.ui.feed
 
 import me.atomx2u.rssr.domain.model.Feed
 

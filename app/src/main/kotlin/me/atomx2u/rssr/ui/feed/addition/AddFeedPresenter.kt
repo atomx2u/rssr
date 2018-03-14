@@ -1,40 +1,31 @@
 package me.atomx2u.rssr.ui.feed.addition
 
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import me.atomx2u.rssr.dagger.App
-import me.atomx2u.rssr.mvp.BasePresenter
-import me.atomx2u.rssr.data.pref.Prefs
-import me.atomx2u.rssr.data.util.TimeUtils
-import me.atomx2u.rssr.domain.repository.Repository
-import me.atomx2u.rssr.domain.interactor.feed.FeedValidator
 import me.atomx2u.rssr.domain.interactor.feed.AddFeedUseCase
+import me.atomx2u.rssr.domain.interactor.feed.FeedValidator
 import me.atomx2u.rssr.domain.interactor.feed.IsFeedSubscribedUseCase
-import me.atomx2u.rssr.ui.Navigator
-import java.lang.ref.WeakReference
+import me.atomx2u.rssr.mvp.BasePresenter
+import me.atomx2u.rssr.ui.MainActivityEvent
+import me.atomx2u.rssr.ui.NewFeedAdded
+import javax.inject.Inject
 
-class AddFeedPresenter(
+class AddFeedPresenter @Inject constructor(
     view: AddFeedContract.View,
-    private val navigator: Navigator,
-    private val feedValidator: FeedValidator,
-    prefs: Prefs,
-    timeUtils: TimeUtils
+    private val feedValidator: FeedValidator
 ) : BasePresenter<AddFeedContract.View>(view), AddFeedContract.Presenter {
 
-    var onNewFeedAdded: WeakReference<OnNewFeedAdded>? = null
-
-    private val repo: Repository? = null
-    private val addFeedUseCase: AddFeedUseCase
-    private val isFeedSubscribedUseCase: IsFeedSubscribedUseCase
-
-    init {
-//        repo =
-        addFeedUseCase = AddFeedUseCase(repo!!)
-        isFeedSubscribedUseCase = IsFeedSubscribedUseCase(repo!!)
-    }
+    @Inject
+    lateinit var eventBus: PublishRelay<MainActivityEvent>
+    @Inject
+    lateinit var addFeedUseCase: AddFeedUseCase
+    @Inject
+    lateinit var isFeedSubscribedUseCase: IsFeedSubscribedUseCase
 
     override fun addNewFeedSubscription(feedLink: String) {
         view.get()?.clearErrorHint()
+        view.get()?.switchLoading(true)
         feedValidator.validateFeed(feedLink)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
@@ -53,7 +44,7 @@ class AddFeedPresenter(
 
     private fun onAddNewFeedSubscriptionComplete() {
         view.get()?.switchLoading(false)
-        onNewFeedAdded?.get()?.onNewFeedAdded()
+        eventBus.accept(NewFeedAdded)
         back()
     }
 
@@ -74,9 +65,5 @@ class AddFeedPresenter(
     }
 
     class FeedIsSubscribedException : Exception()
-
-    interface OnNewFeedAdded {
-        fun onNewFeedAdded()
-    }
 }
 

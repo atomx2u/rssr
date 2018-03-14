@@ -10,11 +10,12 @@ import android.widget.TextView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import me.atomx2u.rssr.R
-import me.atomx2u.rssr.ui.model.FeedViewModel
+import me.atomx2u.rssr.ui.feed.FeedViewModel
 import me.atomx2u.rssr.util.ImageLoader
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
+class FeedAdapter @Inject constructor(private val imageLoader: ImageLoader) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
     fun onItemClick(): Observable<FeedViewModel> = onItemClickSubject.throttleFirst(50, TimeUnit.MICROSECONDS)
     fun onItemLongClick(): Observable<FeedViewModel> = onItemLongClickSubject.throttleFirst(50, TimeUnit.MICROSECONDS)
@@ -40,8 +41,8 @@ class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<F
     fun setSelection(feed: FeedViewModel) {
         clearSelection()
         selectedPosition = data.indexOf(feed)
-        if (selectedPosition == -1 ) {
-           return
+        if (selectedPosition == -1) {
+            return
         }
         data[selectedPosition] = data[selectedPosition].copy(isSelected = true)
         notifyItemChanged(selectedPosition)
@@ -52,7 +53,6 @@ class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<F
     private val onItemClickSubject = PublishSubject.create<FeedViewModel>()
     private val onItemLongClickSubject = PublishSubject.create<FeedViewModel>()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)
         return ViewHolder(itemView)
@@ -61,7 +61,6 @@ class FeedAdapter(private val imageLoader: ImageLoader) : RecyclerView.Adapter<F
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.setItem(data[position])
-
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.image)

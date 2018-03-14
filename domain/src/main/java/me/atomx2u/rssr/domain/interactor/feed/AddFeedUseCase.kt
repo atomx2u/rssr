@@ -10,7 +10,7 @@ import me.atomx2u.rssr.domain.arch.UcRequest
  * @see IsFeedSubscribedUseCase
  * @see FeedValidator
  * */
-class AddFeedUseCase(
+class AddFeedUseCase (
     private val repo: Repository
 ) : CompletableUseCase<AddFeedUseCase.Request> {
 

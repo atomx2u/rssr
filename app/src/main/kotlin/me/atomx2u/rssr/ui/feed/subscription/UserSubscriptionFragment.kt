@@ -1,40 +1,32 @@
 package me.atomx2u.rssr.ui.feed.subscription
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import butterknife.OnClick
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_user_subscription.*
-import me.atomx2u.rssr.MainActivity
 import me.atomx2u.rssr.R
-import me.atomx2u.rssr.dagger.App
-import me.atomx2u.rssr.util.getColor
 import me.atomx2u.rssr.mvp.BaseFragment
-import me.atomx2u.rssr.ui.feed.addition.AddFeedPresenter
-import me.atomx2u.rssr.ui.model.FeedViewModel
-import me.atomx2u.rssr.util.ImageLoaderImpl
+import me.atomx2u.rssr.ui.MainActivityEvent
+import me.atomx2u.rssr.ui.feed.FeedViewModel
+import me.atomx2u.rssr.util.getColor
+import javax.inject.Inject
 
 class UserSubscriptionFragment :
-    BaseFragment<UserSubscriptionContract.View, UserSubscriptionContract.Presenter>(),
-    AddFeedPresenter.OnNewFeedAdded {
+    BaseFragment<UserSubscriptionContract.View, UserSubscriptionContract.Presenter>() {
 
     override val layoutRes: Int get() = R.layout.fragment_user_subscription
 
-    override fun vView() = object : UserSubscriptionContract.View {
-        override fun showFeedSubscriptions(feeds: List<FeedViewModel>) {
-            adapter.setData(feeds)
-        }
-    }
-
-    override fun presenter(context: Context): UserSubscriptionContract.Presenter {
-        return UserSubscriptionPresenter(vView, (activity!!.applicationContext as App).repo, (activity as MainActivity).navigator)
-    }
-
-    private val destroyDisposable = CompositeDisposable()
+    @Inject
+    lateinit var eventRelay: PublishRelay<MainActivityEvent>
+    @Inject
+    lateinit var destroyDisposable: CompositeDisposable
+    @Inject
+    lateinit var adapter: FeedAdapter
 
     private var viewState: ViewState = ViewState.NONE
         set(value) {
@@ -49,11 +41,10 @@ class UserSubscriptionFragment :
                     backgroundTintList = ColorStateList.valueOf(getColor(R.color.dangerRed))
                     setImageResource(R.drawable.ic_delete)
                 }
-                else -> {}
+                else -> {
+                }
             }
         }
-
-    private lateinit var adapter: FeedAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,6 +52,11 @@ class UserSubscriptionFragment :
         setupSubscriptionRecyclerView()
         viewState = ViewState.ADD
         presenter.updateFavoriteFeedSubscriptions()
+        destroyDisposable.add(
+            eventRelay.subscribe {
+                presenter.updateFavoriteFeedSubscriptions()
+            }
+        )
     }
 
     override fun onDestroy() {
@@ -69,12 +65,8 @@ class UserSubscriptionFragment :
         destroyDisposable.dispose()
     }
 
-    override fun onNewFeedAdded() {
-        presenter.updateFavoriteFeedSubscriptions()
-    }
-
     private fun setupSubscriptionRecyclerView() {
-        adapter = FeedAdapter(ImageLoaderImpl(activity!!.applicationContext)).apply {
+        adapter.apply {
             destroyDisposable.add(onItemClick().subscribe(::onUserSubscriptionItemClick))
             destroyDisposable.add(onItemLongClick().subscribe(::onUserSubscriptionItemLongClick))
         }
@@ -99,7 +91,8 @@ class UserSubscriptionFragment :
             adapter.clearSelection()
             viewState = ViewState.ADD
         }
-        else -> {}
+        else -> {
+        }
     }
 
     private fun onUserSubscriptionItemLongClick(feed: FeedViewModel) {
@@ -115,5 +108,11 @@ class UserSubscriptionFragment :
         ADD,
         DELETE,
         NONE
+    }
+}
+
+class ViewController @Inject constructor(val instance: UserSubscriptionFragment) : UserSubscriptionContract.View {
+    override fun showFeedSubscriptions(feeds: List<FeedViewModel>) {
+        instance.adapter.setData(feeds)
     }
 }

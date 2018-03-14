@@ -1,11 +1,12 @@
-package me.atomx2u.rssr.dagger.module
+package me.atomx2u.rssr.dagger.app.module
 
 import android.content.Context
 import dagger.Module
+import dagger.Provides
 import io.reactivex.Scheduler
-import me.atomx2u.rssr.dagger.AppContext
-import me.atomx2u.rssr.dagger.ReadScheduler
-import me.atomx2u.rssr.dagger.WriteScheduler
+import me.atomx2u.rssr.dagger.app.AppContext
+import me.atomx2u.rssr.dagger.app.ReadScheduler
+import me.atomx2u.rssr.dagger.app.WriteScheduler
 import me.atomx2u.rssr.data.RepositoryImpl
 import me.atomx2u.rssr.data.database.DAO
 import me.atomx2u.rssr.data.database.DAOImpl
@@ -21,21 +22,26 @@ import javax.inject.Singleton
 class DataModule {
 
     @Singleton
+    @Provides
     fun providePrefs(@AppContext context: Context): Prefs = Prefs(context)
 
     @Singleton
+    @Provides
     fun provideDao(
         @ReadScheduler readScheduler: Scheduler,
         @WriteScheduler writeScheduler: Scheduler
     ): DAO = DAOImpl(readScheduler, writeScheduler)
 
     @Singleton
+    @Provides
     fun provideService(): Service = ServiceImpl()
 
     @Singleton
+    @Provides
     fun provideTimeUtils(): TimeUtils = TimeUtilsImpl()
 
     @Singleton
-    fun provideReposity(dao: DAO, prefs: Prefs, service: Service, timeUtils: TimeUtils): Repository =
+    @Provides
+    fun provideRepository(dao: DAO, prefs: Prefs, service: Service, timeUtils: TimeUtils): Repository =
         RepositoryImpl(dao, service, prefs, timeUtils)
 }

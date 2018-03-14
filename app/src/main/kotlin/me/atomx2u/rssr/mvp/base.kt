@@ -1,17 +1,14 @@
 package me.atomx2u.rssr.mvp
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.ButterKnife
 import butterknife.Unbinder
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
+import dagger.android.support.DaggerAppCompatDialogFragment
+import dagger.android.support.DaggerFragment
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -51,15 +48,16 @@ abstract class BasePresenter<View : MvpView>(view: View) : MvpPresenter {
     fun <T> WeakReference<T>.callIfNotNull(block: T.() -> Unit) = get()?.let(block)
 }
 
-abstract class BaseActivity<VView: MvpView, Presenter : MvpPresenter>
-    : AppCompatActivity(), MvpNexus {
+abstract class BaseActivity<VView : MvpView, Presenter : MvpPresenter>
+    : DaggerAppCompatActivity(), MvpNexus {
 
+    @Inject
     lateinit var vView: VView
+
     @Inject
     lateinit var presenter: Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        inject()
         super.onCreate(savedInstanceState)
         setContentView(layoutRes)
         presenter.create()
@@ -85,25 +83,27 @@ abstract class BaseActivity<VView: MvpView, Presenter : MvpPresenter>
             ?.reversed()
             ?.find { it.isVisible && it is MvpNexus }
             ?.let { (it as BaseFragment<*, *>).onBack() }
-            ?:super.onBackPressed()
+            ?: super.onBackPressed()
     }
 
     final override fun onBack() = onBackPressed()
 
     abstract val layoutRes: Int
-    abstract fun inject()
 }
 
 /**
  * BaseFragment 并不是一个 View，而是一个 P, V 关系的联结(nexus)。
  * */
 abstract class BaseFragment<VView : MvpView, Presenter : MvpPresenter>
-    : Fragment(), MvpNexus {
+    : DaggerFragment(), MvpNexus {
 
+    @Inject
     lateinit var vView: VView
+
+    @Inject
     lateinit var presenter: Presenter
 
-    private lateinit var unbinder : Unbinder
+    private lateinit var unbinder: Unbinder
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layoutRes, container, false).apply {
@@ -113,8 +113,6 @@ abstract class BaseFragment<VView : MvpView, Presenter : MvpPresenter>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vView = vView()
-        presenter = presenter(context!!)
         presenter.create()
     }
 
@@ -143,18 +141,19 @@ abstract class BaseFragment<VView : MvpView, Presenter : MvpPresenter>
     }
 
     abstract val layoutRes: Int
-    abstract fun vView(): VView
-    abstract fun presenter(context: Context): Presenter
 }
 
 // TODO 变扭
-abstract class BaseDialogFragment<VView: MvpView, Presenter: MvpPresenter>
-    : DialogFragment(), MvpNexus {
+abstract class BaseDialogFragment<VView : MvpView, Presenter : MvpPresenter>
+    : DaggerAppCompatDialogFragment(), MvpNexus {
 
+    @Inject
     lateinit var vView: VView
+
+    @Inject
     lateinit var presenter: Presenter
 
-    private lateinit var unbinder : Unbinder
+    private lateinit var unbinder: Unbinder
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layoutRes, container, false).apply {
@@ -164,8 +163,6 @@ abstract class BaseDialogFragment<VView: MvpView, Presenter: MvpPresenter>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vView = vView()
-        presenter = presenter(context!!)
         presenter.create()
     }
 
@@ -194,12 +191,8 @@ abstract class BaseDialogFragment<VView: MvpView, Presenter: MvpPresenter>
     }
 
     abstract val layoutRes: Int
-    abstract fun vView(): VView
-    abstract fun presenter(context: Context): Presenter
 }
 
-
-// ViewActionQueue for preventing the onNewFeedAdded FragmentTransaction after onSaveInstanceState()
 // 阻止进一步的操作（UI操作过程再次启动新的后台线程操作）
 class RxViewActionQueue(
     private val uiScheduler: Scheduler
@@ -227,7 +220,7 @@ class RxViewActionQueue(
         compositeDisposable.dispose()
     }
 
-    // 缺点： 如果有 error log， 在 pause 时也将延迟；可以将 error log 放在 doOnError 里
+    // TODO 如果有 error log， 在 pause 时将被推迟；可以将 error log 放在 doOnError 里(也不好的样子）
     fun <T> subscribeTo(
         observable: Observable<T>,
         onNext: Consumer<in T> = Functions.emptyConsumer(),
@@ -276,7 +269,7 @@ class RxViewActionQueue(
         }
     }
 
-    inner class QueueAction(private val source: Action): Action {
+    inner class QueueAction(private val source: Action) : Action {
         override fun run() {
             if (isPaused) {
                 synchronized(queue) {
@@ -287,5 +280,4 @@ class RxViewActionQueue(
             }
         }
     }
-
 }
